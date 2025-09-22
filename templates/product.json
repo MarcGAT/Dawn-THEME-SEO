@@ -47,7 +47,7 @@
             "enable_customizer": true,
             "customizer_title": "🎨 Dein Paracord-Set konfigurieren",
             "display_method": "auto",
-            "required_tags": "",
+            "required_tags": "paracord",
             "required_collections": ""
           }
         },
