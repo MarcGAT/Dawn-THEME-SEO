@@ -37,12 +37,67 @@
     border-top:none !important;
     margin-top:0 !important;
     padding-top:0 !important;
+    border:none !important;
   }
 
   /* Sicherstellen, dass keine unerwünschten Abstände entstehen */
   .ps-onebar{
     margin-bottom:0 !important;
     padding-bottom:0 !important;
+    border-bottom:none !important;
+  }
+
+  /* Entfernen aller möglichen Ränder und Linien */
+  .utility-bar{
+    border:none !important;
+    border-top:none !important;
+    border-bottom:none !important;
+  }
+
+  /* Spezifisch für Marquee-Style: Alle Ränder entfernen */
+  .ps-onebar ~ * {
+    border-top:none !important;
+    margin-top:0 !important;
+  }
+
+  /* Entfernen des schwarzen Balkens nach der Ankündigungsleiste */
+  .ps-onebar::after,
+  .ps-onebar::before {
+    display:none !important;
+  }
+
+  /* Alle möglichen Trennlinien entfernen */
+  hr, .divider, .separator, .border-line {
+    display:none !important;
+  }
+
+  /* Schwarze Balken spezifisch entfernen */
+  *[style*="background-color: black"],
+  *[style*="background: black"],
+  *[style*="border-color: black"],
+  .black-bar,
+  .dark-bar {
+    display:none !important;
+    background:none !important;
+    border:none !important;
+    height:0 !important;
+    min-height:0 !important;
+  }
+
+  /* Header-spezifische Ränder entfernen */
+  .header,
+  .site-header,
+  .main-header {
+    border-top:none !important;
+    margin-top:0 !important;
+  }
+
+  /* Alle Elemente direkt nach der Ankündigungsleiste */
+  .ps-onebar + * {
+    border-top:none !important;
+    margin-top:0 !important;
+    padding-top:0 !important;
+    box-shadow:none !important;
   }
 
   /* Sicherstellen, dass die Ankündigungsleiste korrekt positioniert ist */
