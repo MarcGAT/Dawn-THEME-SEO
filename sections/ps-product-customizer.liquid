@@ -1,4 +1,117 @@
-<div class="ps-product-customizer"></div>
+<div class="ps-product-customizer" data-ps-customizer>
+  {%- comment -%}
+    Füge eigene Eingaben (input/select/textarea) hier ein.
+    Beschrifte sie mit data-ps-prop="Label" oder setze name="ps_<schlüssel>".
+    Beispiel:
+    <select data-ps-prop="Farbe">
+      <option value="Schwarz">Schwarz</option>
+      <option value="Rot">Rot</option>
+    </select>
+  {%- endcomment -%}
+</div>
+
+<script>
+  (function () {
+    function findProductForm(startEl) {
+      // Suche das nächste Produkt-Formular innerhalb des Product-Sections
+      var el = startEl;
+      while (el) {
+        var form = el.querySelector && el.querySelector('form[action*="/cart/add"], form[action="/cart/add"]');
+        if (form) return form;
+        el = el.parentElement;
+      }
+      return null;
+    }
+
+    function collectCustomizerInputs(root) {
+      var selector = 'input, select, textarea';
+      var all = Array.prototype.slice.call(root.querySelectorAll(selector));
+      return all.filter(function (el) {
+        if (el.type === 'button' || el.type === 'submit' || el.disabled) return false;
+        // Nur Felder, die entweder data-ps-prop haben oder mit ps_ beginnen
+        if (el.hasAttribute('data-ps-prop')) return true;
+        if (el.name && el.name.indexOf('ps_') === 0) return true;
+        return false;
+      });
+    }
+
+    function valueFrom(el) {
+      if (el.type === 'checkbox') return el.checked ? el.value || 'Ja' : '';
+      if (el.type === 'radio') {
+        var group = el.form
+          ? el.form.querySelector('input[name="' + el.name + '"]:checked')
+          : document.querySelector('input[name="' + el.name + '"]:checked');
+        return group ? group.value : '';
+      }
+      return (el.value || '').toString();
+    }
+
+    function makePropertyName(el) {
+      if (el.hasAttribute('data-ps-prop')) return el.getAttribute('data-ps-prop');
+      if (el.name && el.name.indexOf('ps_') === 0) return el.name.replace(/^ps_/, '').replace(/_/g, ' ');
+      return el.name || 'Option';
+    }
+
+    function syncPropertiesIntoForm(customizerRoot, form) {
+      // Alte, von uns erzeugte Inputs entfernen
+      Array.prototype.slice.call(form.querySelectorAll('[data-ps-generated="1"]')).forEach(function (n) {
+        n.parentElement && n.parentElement.removeChild(n);
+      });
+
+      var inputs = collectCustomizerInputs(customizerRoot);
+      inputs.forEach(function (src) {
+        var val = valueFrom(src);
+        if (!val) return; // leere Werte nicht senden
+        var key = makePropertyName(src);
+        var hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.name = 'properties[' + key + ']';
+        hidden.value = val;
+        hidden.setAttribute('data-ps-generated', '1');
+        form.appendChild(hidden);
+      });
+    }
+
+    function init(root) {
+      var form = findProductForm(root);
+      if (!form) return;
+
+      var sync = function () {
+        syncPropertiesIntoForm(root, form);
+      };
+
+      // Bei Formular-Submit sicherstellen, dass Properties drin sind
+      form.addEventListener(
+        'submit',
+        function () {
+          sync();
+        },
+        { capture: true }
+      );
+
+      // Live bei Änderungen synchronisieren
+      root.addEventListener('change', sync);
+      root.addEventListener('input', function (e) {
+        var t = e.target;
+        if (t && (t.hasAttribute('data-ps-prop') || (t.name && t.name.indexOf('ps_') === 0))) sync();
+      });
+
+      // Initial einmal syncen
+      sync();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var nodes = document.querySelectorAll('[data-ps-customizer]');
+      Array.prototype.forEach.call(nodes, init);
+    });
+
+    // Für Theme-Editor (Ajax-Ladezyklen)
+    document.addEventListener('shopify:section:load', function (e) {
+      var root = e.target && e.target.querySelector && e.target.querySelector('[data-ps-customizer]');
+      if (root) init(root);
+    });
+  })();
+</script>
 
 {% schema %}
 {
