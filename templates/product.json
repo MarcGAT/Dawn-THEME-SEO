@@ -41,16 +41,6 @@
             "swatch_shape": "circle"
           }
         },
-        "paracord_customizer_mrfDcT": {
-          "type": "paracord_customizer",
-          "settings": {
-            "enable_customizer": true,
-            "customizer_title": "🎨 Dein Paracord-Set konfigurieren",
-            "display_method": "auto",
-            "required_tags": "",
-            "required_collections": ""
-          }
-        },
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
@@ -111,7 +101,6 @@
         "caption",
         "price",
         "variant_picker",
-        "paracord_customizer_mrfDcT",
         "buy_buttons",
         "description",
         "collapsible-row-0",
