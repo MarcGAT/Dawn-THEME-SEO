@@ -8,6 +8,61 @@
       <option value="Rot">Rot</option>
     </select>
   {%- endcomment -%}
+  <div class="ps-fields">
+    <div class="field">
+      <label for="ps-farbe">Farbe</label>
+      <select id="ps-farbe" data-ps-prop="Farbschema">
+        <option value="Schwarz">Schwarz</option>
+        <option value="Rot">Rot</option>
+        <option value="Grün">Grün</option>
+        <option value="Blau">Blau</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="ps-laenge">Leinenlänge (cm)</label>
+      <input
+        id="ps-laenge"
+        type="number"
+        min="50"
+        max="300"
+        step="1"
+        data-ps-prop="Leinenlänge"
+        placeholder="z. B. 120"
+      >
+    </div>
+
+    <div class="field">
+      <label for="ps-karabiner">Karabiner</label>
+      <select id="ps-karabiner" data-ps-prop="Karabiner">
+        <option value="Standard">Standard</option>
+        <option value="Messing">Messing</option>
+        <option value="Edelstahl">Edelstahl</option>
+        <option value="Schwarz Matt">Schwarz Matt</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="ps-gravur-name">Gravur Name</label>
+      <input id="ps-gravur-name" type="text" maxlength="20" data-ps-prop="Gravur Name" placeholder="Name">
+    </div>
+
+    <div class="field">
+      <label for="ps-gravur-telefon">Gravur Telefon</label>
+      <input
+        id="ps-gravur-telefon"
+        type="text"
+        maxlength="20"
+        data-ps-prop="Gravur Telefon"
+        placeholder="Telefonnummer"
+      >
+    </div>
+
+    <div class="field">
+      <label for="ps-hinweise">Hinweise</label>
+      <textarea id="ps-hinweise" rows="2" data-ps-prop="Hinweise" placeholder="Besondere Wünsche ..."></textarea>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -112,6 +167,44 @@
     });
   })();
 </script>
+
+<style>
+  .ps-product-customizer .ps-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 16px;
+    margin: 16px 0 8px;
+  }
+  @media (max-width: 749px) {
+    .ps-product-customizer .ps-fields {
+      grid-template-columns: 1fr;
+    }
+  }
+  .ps-product-customizer .field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .ps-product-customizer .field input,
+  .ps-product-customizer .field select,
+  .ps-product-customizer .field textarea {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  .ps-product-customizer .field textarea {
+    resize: vertical;
+  }
+  .ps-product-customizer .field input:focus,
+  .ps-product-customizer .field select:focus,
+  .ps-product-customizer .field textarea:focus {
+    outline: none;
+    border-color: #111827;
+    box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.1);
+  }
+</style>
 
 {% schema %}
 {
