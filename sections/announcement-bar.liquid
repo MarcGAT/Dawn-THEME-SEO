@@ -1,6 +1,56 @@
 {{ 'component-slideshow.css' | asset_url | stylesheet_tag }}
 {{ 'component-slider.css' | asset_url | stylesheet_tag }}
 
+<style>
+  :root{
+    --ps-bg:{{ section.settings.background_color | default: '#1e3a8a' }};     /* Hintergrund */
+    --ps-fg:{{ section.settings.text_color | default: '#ffffff' }};     /* Textfarbe   */
+    --ps-size:{{ section.settings.font_size | default: '16' }}px;      /* Schriftgr.  */
+    --ps-speed:{{ section.settings.scroll_speed | default: '30' }}s;      /* Lauftempo   */
+    --ps-gap:{{ section.settings.item_gap | default: '18' }}rem;      /* Abstand zw. Messages */
+    --ps-pad:{{ section.settings.vertical_padding | default: '14' }}px;       /* vert. Padding */
+  }
+  .ps-onebar{background:var(--ps-bg);color:var(--ps-fg);border:none;overflow:hidden;font-weight:700;font-size:var(--ps-size);width:100vw;margin-left:calc(-50vw + 50%);position:relative;z-index:10;box-sizing:border-box}
+  .ps-track{display:flex;gap:var(--ps-gap);white-space:nowrap;animation:ps-marquee var(--ps-speed) linear infinite;will-change:transform;padding:var(--ps-pad) 20px;min-width:200vw;box-sizing:border-box}
+  .ps-item{display:flex;align-items:center;flex-shrink:0}
+  .ps-item a{color:inherit;text-decoration:underline}
+  .ps-item a:hover{text-decoration:none;opacity:0.8}
+  @keyframes ps-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media(max-width:640px){:root{--ps-size:{{ section.settings.mobile_font_size | default: '14' }}px;--ps-gap:{{ section.settings.mobile_item_gap | default: '10' }}rem}}
+
+  /* Pause bei Hover */
+  .ps-track:hover{animation-play-state:paused}
+
+  /* Bessere Barrierefreiheit */
+  @media (prefers-reduced-motion: reduce) {
+    .ps-track{animation:none}
+  }
+
+  /* Sicherstellen, dass die Leiste über allem liegt */
+  .utility-bar{position:relative;z-index:5}
+
+  /* Verhindern von horizontalen Scrollbalken */
+  body{overflow-x:hidden}
+
+  /* Entfernen von störenden Rändern beim Marquee-Style */
+  .ps-onebar + .utility-bar{
+    border-top:none !important;
+    margin-top:0 !important;
+    padding-top:0 !important;
+  }
+
+  /* Sicherstellen, dass keine unerwünschten Abstände entstehen */
+  .ps-onebar{
+    margin-bottom:0 !important;
+    padding-bottom:0 !important;
+  }
+
+  /* Sicherstellen, dass die Ankündigungsleiste korrekt positioniert ist */
+  @media screen and (max-width: 749px) {
+    .ps-onebar{margin-left:calc(-50vw + 50%);width:100vw}
+  }
+</style>
+
 {%- liquid
   assign social_icons = true
   if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
@@ -279,7 +329,41 @@
       "name": "t:sections.announcement-bar.presets.name",
       "blocks": [
         {
-          "type": "announcement"
+          "type": "announcement",
+          "settings": {
+            "text": "🐾 Hundehalsbänder nach Maß aus Paracord",
+            "link": "/collections/hundehalsbaender"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "🎨 Viele Farben & Größen – passend zu Leinen"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "🤲 Handgemacht in der Schweiz"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "🚚 Gratis Versand ab 130 CHF"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "⚡ Lieferung in 2–3 Werktagen"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "🔄 30 Tage Geld-zurück-Garantie"
+          }
         }
       ]
     }
