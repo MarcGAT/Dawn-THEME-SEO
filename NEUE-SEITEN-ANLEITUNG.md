@@ -143,3 +143,4 @@ Alle Texte sind direkt in den Liquid-Dateien und können einfach geändert werde
 Die Struktur ist modular aufgebaut - neue Sektionen können einfach hinzugefügt werden.
 
 Die neuen Seiten machen deinen Store professioneller und bieten echten Mehrwert für deine Kunden! 🎉
+
