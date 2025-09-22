@@ -1,0 +1,96 @@
+{%- comment -%}
+  Pfotenstore – Verbesserte Anzeige der Paracord-Customizer Properties im Warenkorb
+  Zeigt die Customizer-Optionen übersichtlich und benutzerfreundlich an
+{%- endcomment -%}
+
+{%- if item.properties.size > 0 -%}
+  <div class="ps-cart-properties">
+    {%- for property in item.properties -%}
+      {%- assign property_first_char = property.first | slice: 0 -%}
+      {%- if property.last != blank and property_first_char != '_' -%}
+        {%- comment -%} Spezielle Formatierung für Paracord-Customizer Properties {%- endcomment -%}
+        {%- if property.first == 'Leinenlänge' -%}
+          <div class="ps-property ps-property-length">
+            <span class="ps-property-label">📏 Leine:</span>
+            <span class="ps-property-value">{{ property.last }}</span>
+          </div>
+        {%- elsif property.first == 'Karabiner' -%}
+          <div class="ps-property ps-property-karabiner">
+            <span class="ps-property-label">🔗 Karabiner:</span>
+            <span class="ps-property-value">{{ property.last }}</span>
+          </div>
+        {%- elsif property.first == 'Farbschema' -%}
+          <div class="ps-property ps-property-color">
+            <span class="ps-property-label">🎨 Farbschema:</span>
+            <span class="ps-property-value">{{ property.last }}</span>
+          </div>
+        {%- elsif property.first == 'Halsband-Größe' -%}
+          <div class="ps-property ps-property-size">
+            <span class="ps-property-label">🐕 Halsband:</span>
+            <span class="ps-property-value">{{ property.last }}</span>
+          </div>
+        {%- elsif property.first == 'Gravur Name' -%}
+          <div class="ps-property ps-property-name">
+            <span class="ps-property-label">✏️ Gravur Name:</span>
+            <span class="ps-property-value">{{ property.last }}</span>
+          </div>
+        {%- elsif property.first == 'Gravur Telefon' -%}
+          <div class="ps-property ps-property-phone">
+            <span class="ps-property-label">📱 Gravur Telefon:</span>
+            <span class="ps-property-value">{{ property.last }}</span>
+          </div>
+        {%- elsif property.first == 'Hinweise' -%}
+          <div class="ps-property ps-property-notes">
+            <span class="ps-property-label">📝 Hinweise:</span>
+            <span class="ps-property-value">{{ property.last }}</span>
+          </div>
+        {%- else -%}
+          {%- comment -%} Standard-Formatierung für andere Properties {%- endcomment -%}
+          <div class="product-option">
+            <dt>{{ property.first }}:</dt>
+            <dd>
+              {%- if property.last contains '/uploads/' -%}
+                <a href="{{ property.last }}" class="link" target="_blank">
+                  {{ property.last | split: '/' | last }}
+                </a>
+              {%- else -%}
+                {{ property.last }}
+              {%- endif -%}
+            </dd>
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  <style>
+    .ps-cart-properties {
+      margin-top: 8px;
+    }
+    .ps-property {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 4px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .ps-property-label {
+      font-weight: 600;
+      color: #374151;
+      margin-right: 8px;
+      min-width: 80px;
+    }
+    .ps-property-value {
+      color: #6b7280;
+      flex: 1;
+    }
+    .ps-property-notes .ps-property-value {
+      font-style: italic;
+      background: #f9fafb;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border-left: 3px solid #d1d5db;
+    }
+  </style>
+{%- endif -%}
+

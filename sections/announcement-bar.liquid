@@ -1,0 +1,481 @@
+{{ 'component-slideshow.css' | asset_url | stylesheet_tag }}
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+
+<style>
+  :root{
+    --ps-bg:{{ section.settings.background_color | default: '#1e3a8a' }};     /* Hintergrund */
+    --ps-fg:{{ section.settings.text_color | default: '#ffffff' }};     /* Textfarbe   */
+    --ps-size:{{ section.settings.font_size | default: '16' }}px;      /* Schriftgr.  */
+    --ps-speed:{{ section.settings.scroll_speed | default: '30' }}s;      /* Lauftempo   */
+    --ps-gap:{{ section.settings.item_gap | default: '18' }}rem;      /* Abstand zw. Messages */
+    --ps-pad:{{ section.settings.vertical_padding | default: '14' }}px;       /* vert. Padding */
+  }
+  .ps-onebar{background:var(--ps-bg);color:var(--ps-fg);border-bottom:1px solid rgba(255,255,255,.15);overflow:hidden;font-weight:700;font-size:var(--ps-size);width:100vw;margin-left:calc(-50vw + 50%);position:relative;z-index:10;box-sizing:border-box}
+  .ps-track{display:flex;gap:var(--ps-gap);white-space:nowrap;animation:ps-marquee var(--ps-speed) linear infinite;will-change:transform;padding:var(--ps-pad) 20px;min-width:200vw;box-sizing:border-box}
+  .ps-item{display:flex;align-items:center;flex-shrink:0}
+  .ps-item a{color:inherit;text-decoration:underline}
+  .ps-item a:hover{text-decoration:none;opacity:0.8}
+  @keyframes ps-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media(max-width:640px){:root{--ps-size:{{ section.settings.mobile_font_size | default: '14' }}px;--ps-gap:{{ section.settings.mobile_item_gap | default: '10' }}rem}}
+
+  /* Pause bei Hover */
+  .ps-track:hover{animation-play-state:paused}
+
+  /* Bessere Barrierefreiheit */
+  @media (prefers-reduced-motion: reduce) {
+    .ps-track{animation:none}
+  }
+
+  /* Sicherstellen, dass die Leiste über allem liegt */
+  .utility-bar{position:relative;z-index:5}
+
+  /* Verhindern von horizontalen Scrollbalken */
+  body{overflow-x:hidden}
+
+  /* Sicherstellen, dass die Ankündigungsleiste korrekt positioniert ist */
+  @media screen and (max-width: 749px) {
+    .ps-onebar{margin-left:calc(-50vw + 50%);width:100vw}
+  }
+</style>
+
+{%- liquid
+  assign social_icons = true
+  if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
+    assign social_icons = false
+  endif
+  if section.settings.enable_country_selector or section.settings.enable_language_selector
+    assign language_country_selector = true
+  endif
+  if section.blocks.size > 0
+    assign announcement_bar = true
+  endif
+-%}
+
+{% if social_icons %}
+  {{ 'component-list-social.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{%- if section.settings.enable_marquee_style and section.blocks.size > 0 -%}
+  <!-- Marquee Ankündigungsleiste - Volle Breite über allem -->
+  <div class="ps-onebar" role="region" aria-label="{{ 'sections.header.announcement' | t }}">
+    <div class="ps-track">
+      {%- for block in section.blocks -%}
+        {%- if block.settings.text != blank -%}
+          <span class="ps-item" {{ block.shopify_attributes }}>
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
+            {%- else -%}
+              {{ block.settings.text | escape }}
+            {%- endif -%}
+          </span>
+        {%- endif -%}
+      {%- endfor -%}
+      <!-- Duplikat für nahtlose Endlosschleife -->
+      {%- for block in section.blocks -%}
+        {%- if block.settings.text != blank -%}
+          <span class="ps-item">
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
+            {%- else -%}
+              {{ block.settings.text | escape }}
+            {%- endif -%}
+          </span>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
+
+<div
+  class="utility-bar color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator and section.blocks.size > 0 %} utility-bar--bottom-border{% elsif section.settings.show_line_separator and section.settings.show_social and social_icons%} utility-bar--bottom-border-social-only{% endif %}{% if section.settings.enable_country_selector or section.settings.enable_language_selector %} header-localization{% endif %}"
+>
+  <div class="page-width utility-bar__grid{% if announcement_bar and language_country_selector or section.settings.show_social and social_icons %} utility-bar__grid--3-col{% elsif language_country_selector or section.settings.show_social and social_icons %} utility-bar__grid--2-col{% endif %}">
+    {%- if section.settings.show_social and social_icons -%}
+      {%- render 'social-icons' -%}
+    {%- endif -%}
+    {%- if section.blocks.size == 1 and section.settings.enable_marquee_style == false -%}
+      <div
+        class="announcement-bar{% if section.settings.show_social %} announcement-bar--one-announcement{% endif %}"
+        role="region"
+        aria-label="{{ 'sections.header.announcement' | t }}"
+        {{ section.blocks.first.shopify_attributes }}
+      >
+        {%- if section.blocks.first.settings.text != blank -%}
+          {%- if section.blocks.first.settings.link != blank -%}
+            <a
+              href="{{ section.blocks.first.settings.link }}"
+              class="announcement-bar__link link link--text focus-inset animate-arrow"
+            >
+          {%- endif -%}
+          <p class="announcement-bar__message h5">
+            <span>{{ section.blocks.first.settings.text | escape }}</span>
+            {%- if section.blocks.first.settings.link != blank -%}
+              {{- 'icon-arrow.svg' | inline_asset_content -}}
+            {%- endif -%}
+          </p>
+          {%- if section.blocks.first.settings.link != blank -%}
+            </a>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    {%- elsif section.blocks.size > 1 and section.settings.enable_marquee_style == false -%}
+      <slideshow-component
+        class="announcement-bar"
+        role="region"
+        aria-roledescription="{{ 'sections.announcements.carousel' | t }}"
+        aria-label="{{ 'sections.announcements.announcement_bar' | t }}"
+      >
+        <div class="announcement-bar-slider slider-buttons">
+          <button
+            type="button"
+            class="slider-button slider-button--prev"
+            name="previous"
+            aria-label="{{ 'sections.announcements.previous_announcement' | t }}"
+            aria-controls="Slider-{{ section.id }}"
+          >
+            <span class="svg-wrapper">
+              {{- 'icon-caret.svg' | inline_asset_content -}}
+            </span>
+          </button>
+          <div
+            class="grid grid--1-col slider slider--everywhere"
+            id="Slider-{{ section.id }}"
+            aria-live="polite"
+            aria-atomic="true"
+            data-autoplay="{{ section.settings.auto_rotate }}"
+            data-speed="{{ section.settings.change_slides_speed }}"
+          >
+            {%- for block in section.blocks -%}
+              <div
+                class="slideshow__slide slider__slide grid__item grid--1-col"
+                id="Slide-{{ section.id }}-{{ forloop.index }}"
+                {{ block.shopify_attributes }}
+                role="group"
+                aria-roledescription="{{ 'sections.announcements.announcement' | t }}"
+                aria-label="{{ forloop.index }} {{ 'general.slider.of' | t }} {{ forloop.length }}"
+                tabindex="-1"
+              >
+                <div
+                  class="announcement-bar__announcement"
+                  role="region"
+                  aria-label="{{ 'sections.header.announcement' | t }}"
+                >
+                  {%- if block.settings.text != blank -%}
+                    {%- if block.settings.link != blank -%}
+                      <a
+                        href="{{ block.settings.link }}"
+                        class="announcement-bar__link link link--text focus-inset animate-arrow"
+                      >
+                    {%- endif -%}
+                    <p class="announcement-bar__message h5">
+                      <span>{{ block.settings.text | escape }}</span>
+                      {%- if block.settings.link != blank -%}
+                        {{- 'icon-arrow.svg' | inline_asset_content -}}
+                      {%- endif -%}
+                    </p>
+                    {%- if block.settings.link != blank -%}
+                      </a>
+                    {%- endif -%}
+                  {%- endif -%}
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+          <button
+            type="button"
+            class="slider-button slider-button--next"
+            name="next"
+            aria-label="{{ 'sections.announcements.next_announcement' | t }}"
+            aria-controls="Slider-{{ section.id }}"
+          >
+            <span class="svg-wrapper">
+              {{- 'icon-caret.svg' | inline_asset_content -}}
+            </span>
+          </button>
+        </div>
+      </slideshow-component>
+      {%- if request.design_mode -%}
+        <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
+        <style>
+          /* theme editor power preview fix */
+          .announcement-bar-slider .slider__slide[aria-hidden='true'] {
+            visibility: hidden;
+          }
+        </style>
+      {%- endif -%}
+    {%- endif -%}
+    <div class="localization-wrapper">
+      {%- if section.settings.enable_country_selector and localization.available_countries.size > 1 -%}
+        <localization-form class="small-hide medium-hide">
+          {%- form 'localization', id: 'AnnouncementCountryForm', class: 'localization-form' -%}
+            <div>
+              <h2 class="visually-hidden" id="AnnouncementCountryLabel">{{ 'localization.country_label' | t }}</h2>
+              {%- render 'country-localization', localPosition: 'AnnouncementCountry' -%}
+            </div>
+          {%- endform -%}
+        </localization-form>
+      {% endif %}
+
+      {%- if section.settings.enable_language_selector and localization.available_languages.size > 1 -%}
+        <localization-form class="small-hide medium-hide">
+          {%- form 'localization', id: 'AnnouncementLanguageForm', class: 'localization-form' -%}
+            <div>
+              <h2 class="visually-hidden" id="AnnouncementLanguageLabel">{{ 'localization.language_label' | t }}</h2>
+              {%- render 'language-localization', localPosition: 'AnnouncementLanguage' -%}
+            </div>
+          {%- endform -%}
+        </localization-form>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.announcement-bar.name",
+  "max_blocks": 12,
+  "class": "announcement-bar-section",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "🎨 Marquee-Style Ankündigungsleiste"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_marquee_style",
+      "label": "Marquee-Style aktivieren",
+      "info": "Aktiviert die neue Laufschrift-Ankündigungsleiste",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Hintergrundfarbe",
+      "default": "#1e3a8a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Textfarbe",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Schriftgröße (Desktop)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_font_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Schriftgröße (Mobile)",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "min": 15,
+      "max": 60,
+      "step": 5,
+      "unit": "s",
+      "label": "Laufgeschwindigkeit",
+      "info": "Niedrigere Werte = schneller",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "rem",
+      "label": "Abstand zwischen Items (Desktop)",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "mobile_item_gap",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "rem",
+      "label": "Abstand zwischen Items (Mobile)",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "vertical_padding",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertikaler Abstand",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Klassische Einstellungen"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "t:sections.announcement-bar.settings.auto_rotate.label",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "change_slides_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "t:sections.announcement-bar.settings.change_slides_speed.label",
+      "default": 5
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "scheme-4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_line_separator",
+      "default": true,
+      "label": "t:sections.header.settings.show_line_separator.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.announcement-bar.settings.heading_utilities.content"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.announcement-bar.settings.paragraph.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "default": false,
+      "label": "t:sections.announcement-bar.settings.show_social.label",
+      "info": "t:sections.announcement-bar.settings.show_social.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_country_selector",
+      "default": false,
+      "label": "t:sections.announcement-bar.settings.enable_country_selector.label",
+      "info": "t:sections.announcement-bar.settings.enable_country_selector.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_language_selector",
+      "default": false,
+      "label": "t:sections.announcement-bar.settings.enable_language_selector.label",
+      "info": "t:sections.announcement-bar.settings.enable_language_selector.info"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Ankündigung",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "🐾 Hundehalsbänder nach Maß aus Paracord",
+          "label": "Ankündigungstext",
+          "info": "Emojis können direkt eingegeben werden: 🐾 🎨 🤲 🚚 ⚡ 🔄"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)",
+          "info": "Wird der Text anklickbar machen"
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "label": "Text-Stil",
+          "options": [
+            {
+              "value": "normal",
+              "label": "Normal"
+            },
+            {
+              "value": "bold",
+              "label": "Fett"
+            },
+            {
+              "value": "highlight",
+              "label": "Hervorhebung"
+            }
+          ],
+          "default": "normal"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee Ankündigungsleiste",
+      "settings": {
+        "enable_marquee_style": true,
+        "background_color": "#1e3a8a",
+        "text_color": "#ffffff",
+        "font_size": 16,
+        "scroll_speed": 30
+      },
+      "blocks": [
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "🐾 Hundehalsbänder nach Maß aus Paracord",
+            "link": "/collections/hundehalsbaender"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "🎨 Viele Farben & Größen – passend zu Leinen"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "🤲 Handgemacht in der Schweiz"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "🚚 Gratis Versand ab 130 CHF"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "⚡ Lieferung in 2–3 Werktagen"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "🔄 30 Tage Geld-zurück-Garantie"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

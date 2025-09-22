@@ -1,0 +1,146 @@
+{%- comment -%}
+  Pfotenstore – Paracord Konfigurator (Dawn)
+  Fügt Line Item Properties für maßgeschneiderte Leine/Halsband hinzu.
+{%- endcomment -%}
+
+<style>
+  .ps-cust{border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin:16px 0;background:#fafafa}
+  .ps-cust h4{margin:0 0 8px;font-size:16px}
+  .ps-cust .grid{display:grid;gap:12px}
+  .ps-cust label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+  .ps-cust select,.ps-cust input[type="text"],.ps-cust textarea{
+    width:100%;border:1px solid #d1d5db;border-radius:8px;padding:10px 12px;font-size:14px;background:#fff
+  }
+  .ps-cust .row{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+  .ps-cust small{color:#6b7280;font-size:12px}
+  .ps-preview{margin-top:10px;font-size:13px;color:#374151}
+  @media (max-width: 720px){ .ps-cust .row{grid-template-columns:1fr} }
+</style>
+
+<div id="ps-customizer" class="ps-cust">
+  <h4>🎨 Dein Jasmin-Set konfigurieren</h4>
+  <div class="grid">
+    <div class="row">
+      <div>
+        <label for="ps-length">Länge (Leine)</label>
+        <select id="ps-length" name="properties[Leinenlänge]">
+          <option value="1,5 m">1,5 m</option>
+          <option value="2,0 m" selected>2,0 m</option>
+          <option value="3,0 m">3,0 m</option>
+        </select>
+      </div>
+      <div>
+        <label for="ps-karabiner">Karabiner</label>
+        <select id="ps-karabiner" name="properties[Karabiner]">
+          <option value="Schwarz – Stahl" selected>Schwarz – Stahl</option>
+          <option value="Silber – Stahl">Silber – Stahl</option>
+          <option value="Gold – Messing">Gold – Messing</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="ps-color">Farbschema</label>
+        <select id="ps-color" name="properties[Farbschema]">
+          <option value="Jasmin (Bordeaux/Weiß/Schwarz/Rosé)" selected>Jasmin (Bordeaux/Weiß/Schwarz/Rosé)</option>
+          <option value="Jasmin dunkel (Bordeaux/Schwarz/Rosé)">Jasmin dunkel (Bordeaux/Schwarz/Rosé)</option>
+          <option value="Eigenes Schema">Eigenes Schema (im Feld „Hinweise“ angeben)</option>
+        </select>
+      </div>
+      <div>
+        <label for="ps-halsband">Halsband-Größe</label>
+        <select id="ps-halsband" name="properties[Halsband-Größe]">
+          <option value="XS (25–30 cm)">XS (25–30 cm)</option>
+          <option value="S (30–35 cm)">S (30–35 cm)</option>
+          <option value="M (35–40 cm)" selected>M (35–40 cm)</option>
+          <option value="L (40–45 cm)">L (40–45 cm)</option>
+          <option value="XL (45–50 cm)">XL (45–50 cm)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="ps-name">Gravur – Name (optional)</label>
+        <input id="ps-name" type="text" name="properties[Gravur Name]" maxlength="20" placeholder="z. B. Bella">
+        <small>Max. 20 Zeichen</small>
+      </div>
+      <div>
+        <label for="ps-phone">Gravur – Telefon (optional)</label>
+        <input id="ps-phone" type="text" name="properties[Gravur Telefon]" maxlength="20" placeholder="z. B. +41 79 123 45 67">
+      </div>
+    </div>
+
+    <div>
+      <label for="ps-notes">Hinweise (Farben, Sonderwünsche)</label>
+      <textarea id="ps-notes" name="properties[Hinweise]" rows="3" placeholder="Z. B. Farbtausch, Ring in Gold, besondere Wünsche …"></textarea>
+    </div>
+
+    <div class="ps-preview" aria-live="polite">
+      <strong>Deine Auswahl:</strong>
+      <span id="ps-preview-text">2,0 m • Karabiner Schwarz – Stahl • Farbschema Jasmin • Halsband M</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // Sicherstellen, dass der Customizer IM Add-to-Cart-Formular sitzt (Dawn nutzt <product-form><form>…)
+  function moveCustomizerIntoForm(){
+    try{
+      var form = document.querySelector('product-form form') || document.querySelector('form[action*="/cart/add"]');
+      var box  = document.getElementById('ps-customizer');
+      if(form && box && !form.contains(box)){
+        var atc = form.querySelector('[type="submit"]') || form.querySelector('button[type="submit"]');
+        atc ? form.insertBefore(box, atc) : form.appendChild(box);
+        console.log('PS Customizer: In Form integriert');
+      }
+    }catch(e){
+      console.error('PS Customizer Fehler:', e);
+    }
+  }
+  function updatePreview(){
+    var length = document.getElementById('ps-length')?.value || '';
+    var karabiner = document.getElementById('ps-karabiner')?.value || '';
+    var color = document.getElementById('ps-color')?.value || '';
+    var halsband = document.getElementById('ps-halsband')?.value || '';
+    
+    var t = [
+      length ? 'Leine: ' + length : '',
+      karabiner ? 'Karabiner: ' + karabiner : '',
+      color ? 'Farbschema: ' + color : '',
+      halsband ? 'Halsband: ' + halsband : ''
+    ].filter(Boolean).join(' • ');
+    
+    var el = document.getElementById('ps-preview-text');
+    if(el) el.textContent = t || 'Bitte wähle deine Optionen';
+  }
+  // Event-Listener für verschiedene Shopify-Events
+  ['DOMContentLoaded','shopify:section:load','shopify:section:select'].forEach(function(evt){
+    document.addEventListener(evt, function(){ 
+      setTimeout(function(){
+        moveCustomizerIntoForm(); 
+        updatePreview();
+        attachEventListeners();
+      }, 100);
+    });
+  });
+  
+  // Event-Listener für Customizer-Felder
+  function attachEventListeners(){
+    ['ps-length','ps-karabiner','ps-color','ps-halsband'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) {
+        el.addEventListener('change', updatePreview);
+        el.addEventListener('input', updatePreview);
+      }
+    });
+  }
+  
+  // Initiale Ausführung
+  moveCustomizerIntoForm(); 
+  updatePreview();
+  attachEventListeners();
+})();
+</script>
