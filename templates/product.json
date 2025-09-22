@@ -34,13 +34,6 @@
           "type": "price",
           "settings": {}
         },
-        "variant_picker": {
-          "type": "variant_picker",
-          "settings": {
-            "picker_type": "button",
-            "swatch_shape": "circle"
-          }
-        },
         "paracord_customizer_mrfDcT": {
           "type": "paracord_customizer",
           "settings": {
@@ -110,7 +103,6 @@
         "title",
         "caption",
         "price",
-        "variant_picker",
         "paracord_customizer_mrfDcT",
         "buy_buttons",
         "description",
