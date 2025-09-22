@@ -158,6 +158,35 @@
     document.addEventListener('DOMContentLoaded', function () {
       var nodes = document.querySelectorAll('[data-ps-customizer]');
       Array.prototype.forEach.call(nodes, init);
+      // Optionaler eigener ATC-Button innerhalb der Section
+      var form = document.querySelector('product-form form') || document.querySelector('form[action*="/cart/add"]');
+      var root = document.querySelector('[data-ps-customizer]');
+      if (form && root && !root.querySelector('#ps-add-to-cart')) {
+        var btn = document.createElement('button');
+        btn.id = 'ps-add-to-cart';
+        btn.type = 'button';
+        btn.className = 'button';
+        btn.style.width = '100%';
+        btn.textContent = 'In den Warenkorb';
+        var hint = document.createElement('small');
+        hint.id = 'ps-atc-hint';
+        hint.style.display = 'block';
+        hint.style.marginTop = '6px';
+        hint.style.color = '#6b7280';
+        hint.textContent = 'Der Button überträgt alle Personalisierungen.';
+        var wrap = document.createElement('div');
+        wrap.style.marginTop = '12px';
+        wrap.appendChild(btn);
+        wrap.appendChild(hint);
+        root.appendChild(wrap);
+        btn.addEventListener('click', function () {
+          try {
+            form.requestSubmit ? form.requestSubmit() : form.submit();
+          } catch (e) {
+            form.submit();
+          }
+        });
+      }
     });
 
     // Für Theme-Editor (Ajax-Ladezyklen)

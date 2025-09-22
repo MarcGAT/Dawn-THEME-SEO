@@ -215,6 +215,13 @@
       <strong>Deine Auswahl:</strong>
       <span id="ps-preview-text">2,0 m • Karabiner Schwarz – Stahl • Farbschema Jasmin • Halsband M</span>
     </div>
+
+    <div style="margin-top:12px;">
+      <button id="ps-add-to-cart" type="button" class="button" style="width:100%;">In den Warenkorb</button>
+      <small id="ps-atc-hint" style="display:block;margin-top:6px;color:#6b7280;"
+        >Der Button überträgt alle Personalisierungen.</small
+      >
+    </div>
   </div>
 </div>
 
@@ -229,6 +236,24 @@
           var atc = form.querySelector('[type="submit"]') || form.querySelector('button[type="submit"]');
           atc ? form.insertBefore(box, atc) : form.appendChild(box);
           console.log('PS Customizer: In Form integriert');
+        }
+        // Falls das Theme keinen sichtbaren ATC-Button rendert, nutzen wir unseren eigenen
+        var localAtc = document.getElementById('ps-add-to-cart');
+        if (localAtc && form) {
+          localAtc.addEventListener(
+            'click',
+            function () {
+              try {
+                // Validierung optional: mindestens eine Variante gewählt etc.
+                // Submit des Formulars auslösen, damit properties[...] mitgeschickt werden
+                form.requestSubmit ? form.requestSubmit() : form.submit();
+              } catch (e) {
+                console.error('PS Customizer Submit Fehler:', e);
+                form.submit();
+              }
+            },
+            { once: true }
+          );
         }
       } catch (e) {
         console.error('PS Customizer Fehler:', e);
