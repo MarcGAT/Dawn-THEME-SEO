@@ -10,7 +10,7 @@
     --ps-gap:{{ section.settings.item_gap | default: '18' }}rem;      /* Abstand zw. Messages */
     --ps-pad:{{ section.settings.vertical_padding | default: '14' }}px;       /* vert. Padding */
   }
-  .ps-onebar{background:var(--ps-bg);color:var(--ps-fg);border-bottom:1px solid rgba(255,255,255,.15);overflow:hidden;font-weight:700;font-size:var(--ps-size);width:100vw;margin-left:calc(-50vw + 50%);position:relative;z-index:10;box-sizing:border-box}
+  .ps-onebar{background:var(--ps-bg);color:var(--ps-fg);border:none;overflow:hidden;font-weight:700;font-size:var(--ps-size);width:100vw;margin-left:calc(-50vw + 50%);position:relative;z-index:10;box-sizing:border-box}
   .ps-track{display:flex;gap:var(--ps-gap);white-space:nowrap;animation:ps-marquee var(--ps-speed) linear infinite;will-change:transform;padding:var(--ps-pad) 20px;min-width:200vw;box-sizing:border-box}
   .ps-item{display:flex;align-items:center;flex-shrink:0}
   .ps-item a{color:inherit;text-decoration:underline}
@@ -31,6 +31,19 @@
 
   /* Verhindern von horizontalen Scrollbalken */
   body{overflow-x:hidden}
+
+  /* Entfernen von störenden Rändern beim Marquee-Style */
+  .ps-onebar + .utility-bar{
+    border-top:none !important;
+    margin-top:0 !important;
+    padding-top:0 !important;
+  }
+
+  /* Sicherstellen, dass keine unerwünschten Abstände entstehen */
+  .ps-onebar{
+    margin-bottom:0 !important;
+    padding-bottom:0 !important;
+  }
 
   /* Sicherstellen, dass die Ankündigungsleiste korrekt positioniert ist */
   @media screen and (max-width: 749px) {
