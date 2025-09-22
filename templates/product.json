@@ -138,6 +138,7 @@
     },
     "ps_product_customizer_htRrnk": {
       "type": "ps-product-customizer",
+      "disabled": true,
       "name": "Paracord Customizer",
       "settings": {}
     },
