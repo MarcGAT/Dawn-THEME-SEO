@@ -41,9 +41,15 @@
             "swatch_shape": "circle"
           }
         },
-        "quantity_selector": {
-          "type": "quantity_selector",
-          "settings": {}
+        "paracord_customizer_mrfDcT": {
+          "type": "paracord_customizer",
+          "settings": {
+            "enable_customizer": true,
+            "customizer_title": "🎨 Dein Paracord-Set konfigurieren",
+            "display_method": "auto",
+            "required_tags": "",
+            "required_collections": ""
+          }
         },
         "buy_buttons": {
           "type": "buy_buttons",
@@ -105,7 +111,7 @@
         "caption",
         "price",
         "variant_picker",
-        "quantity_selector",
+        "paracord_customizer_mrfDcT",
         "buy_buttons",
         "description",
         "collapsible-row-0",
@@ -133,13 +139,7 @@
     "ps_product_customizer_htRrnk": {
       "type": "ps-product-customizer",
       "name": "Paracord Customizer",
-      "settings": {
-        "enable_customizer": true,
-        "customizer_title": "🎨 Dein Paracord-Set konfigurieren",
-        "display_method": "auto",
-        "required_tags": "",
-        "required_collections": ""
-      }
+      "settings": {}
     },
     "image-with-text": {
       "type": "image-with-text",
