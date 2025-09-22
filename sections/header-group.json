@@ -21,13 +21,22 @@
             "link": "",
             "text_style": "normal"
           }
+        },
+        "announcement_DtxnhV": {
+          "type": "announcement",
+          "settings": {
+            "text": "dasdasdasdas",
+            "link": "",
+            "text_style": "normal"
+          }
         }
       },
       "block_order": [
-        "announcement_BqnAmj"
+        "announcement_BqnAmj",
+        "announcement_DtxnhV"
       ],
       "settings": {
-        "auto_rotate": false,
+        "auto_rotate": true,
         "change_slides_speed": 5,
         "color_scheme": "scheme-1",
         "show_line_separator": true,
