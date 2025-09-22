@@ -209,6 +209,16 @@
                 </p>
               {%- when 'custom_liquid' -%}
                 {{ block.settings.custom_liquid }}
+              {%- when 'paracord_customizer' -%}
+                {%- if block.settings.enable_customizer -%}
+                  {%- render 'ps-paracord-customizer',
+                    product: product,
+                    display_method: block.settings.display_method,
+                    required_tags: block.settings.required_tags,
+                    required_collections: block.settings.required_collections,
+                    customizer_title: block.settings.customizer_title
+                  -%}
+                {%- endif -%}
               {%- when 'collapsible_tab' -%}
                 <div class="product__accordion accordion quick-add-hidden" {{ block.shopify_attributes }}>
                   <details id="Details-{{ block.id }}-{{ section.id }}">
@@ -955,6 +965,72 @@
           "id": "custom_liquid",
           "label": "t:sections.custom-liquid.settings.custom_liquid.label",
           "info": "t:sections.custom-liquid.settings.custom_liquid.info"
+        }
+      ]
+    },
+    {
+      "type": "paracord_customizer",
+      "name": "Paracord Customizer",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Paracord Customizer Einstellungen"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_customizer",
+          "label": "Paracord Customizer aktivieren",
+          "info": "Zeigt den Customizer für dieses Produkt an",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "customizer_title",
+          "label": "Titel des Customizers",
+          "default": "🎨 Dein Paracord-Set konfigurieren",
+          "info": "Leer lassen für Standard-Titel"
+        },
+        {
+          "type": "header",
+          "content": "Anzeige-Einstellungen"
+        },
+        {
+          "type": "select",
+          "id": "display_method",
+          "label": "Anzeige-Methode",
+          "options": [
+            {
+              "value": "auto",
+              "label": "Automatisch (basierend auf Produkt-Eigenschaften)"
+            },
+            {
+              "value": "manual",
+              "label": "Manuell (immer anzeigen wenn aktiviert)"
+            },
+            {
+              "value": "tag",
+              "label": "Nur bei bestimmten Tags"
+            },
+            {
+              "value": "collection",
+              "label": "Nur bei bestimmten Collections"
+            }
+          ],
+          "default": "auto"
+        },
+        {
+          "type": "text",
+          "id": "required_tags",
+          "label": "Erforderliche Tags (kommagetrennt)",
+          "info": "Nur bei 'Nur bei bestimmten Tags' relevant. z.B.: paracord, customizer, leash",
+          "placeholder": "paracord, customizer"
+        },
+        {
+          "type": "text",
+          "id": "required_collections",
+          "label": "Erforderliche Collections (kommagetrennt)",
+          "info": "Nur bei 'Nur bei bestimmten Collections' relevant. z.B.: hundehalsbaender, leinen",
+          "placeholder": "hundehalsbaender, leinen"
         }
       ]
     },

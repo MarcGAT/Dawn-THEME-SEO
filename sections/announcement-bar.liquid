@@ -1,82 +1,6 @@
 {{ 'component-slideshow.css' | asset_url | stylesheet_tag }}
 {{ 'component-slider.css' | asset_url | stylesheet_tag }}
 
-<style>
-    :root{
-      --ps-bg:{{ section.settings.background_color | default: '#1e3a8a' }};     /* Hintergrund */
-      --ps-fg:{{ section.settings.text_color | default: '#ffffff' }};     /* Textfarbe   */
-      --ps-size:{{ section.settings.font_size | default: '16' }}px;      /* Schriftgr.  */
-      --ps-speed:{{ section.settings.scroll_speed | default: '30' }}s;      /* Lauftempo   */
-      --ps-gap:{{ section.settings.item_gap | default: '18' }}rem;      /* Abstand zw. Messages */
-      --ps-pad:{{ section.settings.vertical_padding | default: '14' }}px;       /* vert. Padding */
-    }
-    .ps-onebar{background:var(--ps-bg);color:var(--ps-fg);border:none;overflow:hidden;font-weight:700;font-size:var(--ps-size);width:100vw;margin-left:calc(-50vw + 50%);position:relative;z-index:10;box-sizing:border-box}
-    .ps-track{display:flex;gap:var(--ps-gap);white-space:nowrap;animation:ps-marquee var(--ps-speed) linear infinite;will-change:transform;padding:var(--ps-pad) 20px;min-width:200vw;box-sizing:border-box}
-    .ps-item{display:flex;align-items:center;flex-shrink:0}
-    .ps-item a{color:inherit;text-decoration:underline}
-    .ps-item a:hover{text-decoration:none;opacity:0.8}
-    @keyframes ps-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-    @media(max-width:640px){:root{--ps-size:{{ section.settings.mobile_font_size | default: '14' }}px;--ps-gap:{{ section.settings.mobile_item_gap | default: '10' }}rem}}
-
-    /* Pause bei Hover */
-    .ps-track:hover{animation-play-state:paused}
-
-    /* Bessere Barrierefreiheit */
-    @media (prefers-reduced-motion: reduce) {
-      .ps-track{animation:none}
-    }
-
-    /* Sicherstellen, dass die Leiste über allem liegt */
-    .utility-bar{position:relative;z-index:5}
-
-    /* Verhindern von horizontalen Scrollbalken */
-    body{overflow-x:hidden}
-
-  {%- if section.settings.enable_marquee_style -%}
-    /* Nur wenn Marquee-Style aktiviert ist - entfernen von störenden Rändern */
-    .ps-onebar + .utility-bar{
-      border-top:none !important;
-      margin-top:0 !important;
-      padding-top:0 !important;
-      border:none !important;
-    }
-
-    /* Nur wenn Marquee-Style aktiviert ist - keine unerwünschten Abstände */
-    .ps-onebar{
-      margin-bottom:0 !important;
-      padding-bottom:0 !important;
-      border-bottom:none !important;
-    }
-
-    /* Nur wenn Marquee-Style aktiviert ist - alle Ränder entfernen */
-    .ps-onebar ~ * {
-      border-top:none !important;
-      margin-top:0 !important;
-    }
-
-    /* Nur wenn Marquee-Style aktiviert ist - Pseudo-Elemente entfernen */
-    .ps-onebar::after,
-    .ps-onebar::before {
-      display:none !important;
-    }
-
-    /* Nur wenn Marquee-Style aktiviert ist - alle Elemente nach der Ankündigungsleiste */
-    .ps-onebar + * {
-      border-top:none !important;
-      margin-top:0 !important;
-      padding-top:0 !important;
-      box-shadow:none !important;
-    }
-  {%- endif -%}
-
-  {%- if section.settings.enable_marquee_style -%}
-    /* Sicherstellen, dass die Ankündigungsleiste korrekt positioniert ist */
-    @media screen and (max-width: 749px) {
-      .ps-onebar{margin-left:calc(-50vw + 50%);width:100vw}
-    }
-  {%- endif -%}
-</style>
-
 {%- liquid
   assign social_icons = true
   if settings.social_facebook_link == blank and settings.social_instagram_link == blank and settings.social_youtube_link == blank and settings.social_tiktok_link == blank and settings.social_twitter_link == blank and settings.social_pinterest_link == blank and settings.social_snapchat_link == blank and settings.social_tumblr_link == blank and settings.social_vimeo_link == blank
@@ -94,37 +18,6 @@
   {{ 'component-list-social.css' | asset_url | stylesheet_tag }}
 {% endif %}
 
-{%- if section.settings.enable_marquee_style and section.blocks.size > 0 -%}
-  <!-- Marquee Ankündigungsleiste - Volle Breite über allem -->
-  <div class="ps-onebar" role="region" aria-label="{{ 'sections.header.announcement' | t }}">
-    <div class="ps-track">
-      {%- for block in section.blocks -%}
-        {%- if block.settings.text != blank -%}
-          <span class="ps-item" {{ block.shopify_attributes }}>
-            {%- if block.settings.link != blank -%}
-              <a href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
-            {%- else -%}
-              {{ block.settings.text | escape }}
-            {%- endif -%}
-          </span>
-        {%- endif -%}
-      {%- endfor -%}
-      <!-- Duplikat für nahtlose Endlosschleife -->
-      {%- for block in section.blocks -%}
-        {%- if block.settings.text != blank -%}
-          <span class="ps-item">
-            {%- if block.settings.link != blank -%}
-              <a href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
-            {%- else -%}
-              {{ block.settings.text | escape }}
-            {%- endif -%}
-          </span>
-        {%- endif -%}
-      {%- endfor -%}
-    </div>
-  </div>
-{%- endif -%}
-
 <div
   class="utility-bar color-{{ section.settings.color_scheme }} gradient{% if section.settings.show_line_separator and section.blocks.size > 0 %} utility-bar--bottom-border{% elsif section.settings.show_line_separator and section.settings.show_social and social_icons%} utility-bar--bottom-border-social-only{% endif %}{% if section.settings.enable_country_selector or section.settings.enable_language_selector %} header-localization{% endif %}"
 >
@@ -132,7 +25,7 @@
     {%- if section.settings.show_social and social_icons -%}
       {%- render 'social-icons' -%}
     {%- endif -%}
-    {%- if section.blocks.size == 1 and section.settings.enable_marquee_style == false -%}
+    {%- if section.blocks.size == 1 -%}
       <div
         class="announcement-bar{% if section.settings.show_social %} announcement-bar--one-announcement{% endif %}"
         role="region"
@@ -157,7 +50,7 @@
           {%- endif -%}
         {%- endif -%}
       </div>
-    {%- elsif section.blocks.size > 1 and section.settings.enable_marquee_style == false -%}
+    {%- elsif section.blocks.size > 1 -%}
       <slideshow-component
         class="announcement-bar"
         role="region"
@@ -280,91 +173,7 @@
   "settings": [
     {
       "type": "header",
-      "content": "🎨 Marquee-Style Ankündigungsleiste"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_marquee_style",
-      "label": "Marquee-Style aktivieren",
-      "info": "Aktiviert die neue Laufschrift-Ankündigungsleiste",
-      "default": true
-    },
-    {
-      "type": "color",
-      "id": "background_color",
-      "label": "Hintergrundfarbe",
-      "default": "#1e3a8a"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Textfarbe",
-      "default": "#ffffff"
-    },
-    {
-      "type": "range",
-      "id": "font_size",
-      "min": 12,
-      "max": 24,
-      "step": 1,
-      "unit": "px",
-      "label": "Schriftgröße (Desktop)",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "mobile_font_size",
-      "min": 10,
-      "max": 20,
-      "step": 1,
-      "unit": "px",
-      "label": "Schriftgröße (Mobile)",
-      "default": 14
-    },
-    {
-      "type": "range",
-      "id": "scroll_speed",
-      "min": 15,
-      "max": 60,
-      "step": 5,
-      "unit": "s",
-      "label": "Laufgeschwindigkeit",
-      "info": "Niedrigere Werte = schneller",
-      "default": 30
-    },
-    {
-      "type": "range",
-      "id": "item_gap",
-      "min": 8,
-      "max": 32,
-      "step": 2,
-      "unit": "rem",
-      "label": "Abstand zwischen Items (Desktop)",
-      "default": 18
-    },
-    {
-      "type": "range",
-      "id": "mobile_item_gap",
-      "min": 4,
-      "max": 20,
-      "step": 2,
-      "unit": "rem",
-      "label": "Abstand zwischen Items (Mobile)",
-      "default": 10
-    },
-    {
-      "type": "range",
-      "id": "vertical_padding",
-      "min": 8,
-      "max": 24,
-      "step": 2,
-      "unit": "px",
-      "label": "Vertikaler Abstand",
-      "default": 14
-    },
-    {
-      "type": "header",
-      "content": "⚙️ Klassische Einstellungen"
+      "content": "⚙️ Einstellungen"
     },
     {
       "type": "checkbox",
@@ -467,51 +276,10 @@
   ],
   "presets": [
     {
-      "name": "Marquee Ankündigungsleiste",
-      "settings": {
-        "enable_marquee_style": true,
-        "background_color": "#1e3a8a",
-        "text_color": "#ffffff",
-        "font_size": 16,
-        "scroll_speed": 30
-      },
+      "name": "t:sections.announcement-bar.presets.name",
       "blocks": [
         {
-          "type": "announcement",
-          "settings": {
-            "text": "🐾 Hundehalsbänder nach Maß aus Paracord",
-            "link": "{{ routes.collections_url }}/hundehalsbaender"
-          }
-        },
-        {
-          "type": "announcement",
-          "settings": {
-            "text": "🎨 Viele Farben & Größen – passend zu Leinen"
-          }
-        },
-        {
-          "type": "announcement",
-          "settings": {
-            "text": "🤲 Handgemacht in der Schweiz"
-          }
-        },
-        {
-          "type": "announcement",
-          "settings": {
-            "text": "🚚 Gratis Versand ab 130 CHF"
-          }
-        },
-        {
-          "type": "announcement",
-          "settings": {
-            "text": "⚡ Lieferung in 2–3 Werktagen"
-          }
-        },
-        {
-          "type": "announcement",
-          "settings": {
-            "text": "🔄 30 Tage Geld-zurück-Garantie"
-          }
+          "type": "announcement"
         }
       ]
     }
