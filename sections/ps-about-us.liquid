@@ -1,0 +1,407 @@
+{%- comment -%}
+  Pfotenstore – About Us Seite
+  Vorstellung des Unternehmens, der Handwerkskunst und der Mission
+{%- endcomment -%}
+
+<style>
+  .ps-about {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ps-hero {
+    text-align: center;
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    color: white;
+    padding: 80px 40px;
+    border-radius: 20px;
+    margin-bottom: 60px;
+  }
+
+  .ps-hero h1 {
+    font-size: 3.5rem;
+    margin: 0 0 20px;
+    font-weight: 700;
+  }
+
+  .ps-hero .tagline {
+    font-size: 1.3rem;
+    opacity: 0.9;
+    margin-bottom: 30px;
+  }
+
+  .ps-hero .mission {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .ps-story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 80px;
+    align-items: center;
+  }
+
+  .ps-story-text h2 {
+    color: #1e3a8a;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+  }
+
+  .ps-story-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #4b5563;
+    margin-bottom: 20px;
+  }
+
+  .ps-story-image {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .ps-story-image .emoji {
+    font-size: 6rem;
+    margin-bottom: 20px;
+  }
+
+  .ps-values {
+    background: #f8f9fa;
+    padding: 60px 40px;
+    border-radius: 20px;
+    margin-bottom: 60px;
+  }
+
+  .ps-values h2 {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+  }
+
+  .ps-values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+  }
+
+  .ps-value-card {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ps-value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .ps-value-card .icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+
+  .ps-value-card h3 {
+    color: #1e3a8a;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+  }
+
+  .ps-value-card p {
+    color: #6b7280;
+    line-height: 1.6;
+  }
+
+  .ps-process {
+    margin-bottom: 60px;
+  }
+
+  .ps-process h2 {
+    text-align: center;
+    color: #1e3a8a;
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+  }
+
+  .ps-process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+  }
+
+  .ps-step {
+    background: white;
+    padding: 30px 20px;
+    border-radius: 16px;
+    text-align: center;
+    border: 2px solid #e5e7eb;
+    position: relative;
+  }
+
+  .ps-step .step-number {
+    background: #1e3a8a;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 0 auto 20px;
+  }
+
+  .ps-step h3 {
+    color: #1e3a8a;
+    margin-bottom: 15px;
+  }
+
+  .ps-step p {
+    color: #6b7280;
+    line-height: 1.6;
+  }
+
+  .ps-cta {
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    color: white;
+    padding: 60px 40px;
+    border-radius: 20px;
+    text-align: center;
+  }
+
+  .ps-cta h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+
+  .ps-cta p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+  }
+
+  .ps-cta-button {
+    display: inline-block;
+    background: white;
+    color: #1e3a8a;
+    padding: 15px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ps-cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    .ps-hero h1 {
+      font-size: 2.5rem;
+    }
+
+    .ps-story-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .ps-values-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ps-process-steps {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="ps-about">
+  <!-- Hero Section -->
+  <div class="ps-hero">
+    <h1>🐾 Über Pfotenstore.ch</h1>
+    <p class="tagline">Paracord nach Maß – Handgemacht in der Schweiz</p>
+    <p class="mission">
+      Wir fertigen hochwertige Paracord-Leinen und Halsbänder für deine vierbeinigen Lieblinge. Jedes Stück ist
+      einzigartig, robust und perfekt auf deinen Hund zugeschnitten.
+    </p>
+  </div>
+
+  <!-- Unsere Geschichte -->
+  <div class="ps-story-grid">
+    <div class="ps-story-text">
+      <h2>Unsere Geschichte</h2>
+      <p>
+        Alles begann mit unserem eigenen Hund, der eine robuste und schöne Leine brauchte. Nach der Suche in
+        verschiedenen Läden stellten wir fest: Die meisten Leinen waren entweder nicht robust genug oder entsprachen
+        nicht unseren ästhetischen Ansprüchen.
+      </p>
+      <p>
+        So entstand die Idee, eigene Paracord-Leinen und Halsbänder zu fertigen. Was als Hobby begann, entwickelte sich
+        schnell zu einer Leidenschaft für handwerkliche Perfektion und individuelle Anfertigungen.
+      </p>
+      <p>
+        Heute fertigen wir für Hundebesitzer in der ganzen Schweiz maßgeschneiderte Paracord-Produkte, die nicht nur
+        funktional sind, sondern auch ein Statement für die Liebe zu unseren vierbeinigen Freunden setzen.
+      </p>
+    </div>
+    <div class="ps-story-image">
+      <div class="emoji">🤲</div>
+      <h3>Handwerkliche Perfektion</h3>
+      <p>Jedes Stück wird mit Liebe zum Detail und Sorgfalt gefertigt</p>
+    </div>
+  </div>
+
+  <!-- Unsere Werte -->
+  <div class="ps-values">
+    <h2>Unsere Werte</h2>
+    <div class="ps-values-grid">
+      <div class="ps-value-card">
+        <div class="icon">🎨</div>
+        <h3>Individuelle Anfertigung</h3>
+        <p>
+          Jedes Paracord-Produkt wird speziell für deinen Hund angefertigt. Farbe, Länge und Design passen wir genau an
+          deine Wünsche an.
+        </p>
+      </div>
+
+      <div class="ps-value-card">
+        <div class="icon">🇨🇭</div>
+        <h3>Schweizer Qualität</h3>
+        <p>
+          Wir verwenden nur hochwertige Materialien und fertigen ausschließlich in der Schweiz. Kurze Wege und direkter
+          Kontakt zu unseren Kunden.
+        </p>
+      </div>
+
+      <div class="ps-value-card">
+        <div class="icon">💪</div>
+        <h3>Maximale Robustheit</h3>
+        <p>
+          Paracord ist extrem reißfest und langlebig. Unsere Produkte halten auch den aktivsten Hunden stand und
+          begleiten euch über Jahre.
+        </p>
+      </div>
+
+      <div class="ps-value-card">
+        <div class="icon">❤️</div>
+        <h3>Liebe zum Detail</h3>
+        <p>
+          Jeder Knoten, jede Farbe und jede Länge wird sorgfältig geplant. Wir lieben, was wir tun, und das merkst du an
+          jedem Produkt.
+        </p>
+      </div>
+
+      <div class="ps-value-card">
+        <div class="icon">🌱</div>
+        <h3>Nachhaltigkeit</h3>
+        <p>
+          Langlebige Produkte statt Wegwerf-Artikel. Mit unseren robusten Paracord-Produkten schonst du Ressourcen und
+          sparst langfristig.
+        </p>
+      </div>
+
+      <div class="ps-value-card">
+        <div class="icon">🤝</div>
+        <h3>Persönlicher Service</h3>
+        <p>
+          Du hast Fragen? Wir beraten dich gerne! Von der Farbauswahl bis zur Größenbestimmung – wir sind für dich da.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unser Prozess -->
+  <div class="ps-process">
+    <h2>So entsteht dein Paracord-Produkt</h2>
+    <div class="ps-process-steps">
+      <div class="ps-step">
+        <div class="step-number">1</div>
+        <h3>Beratung & Planung</h3>
+        <p>Du teilst uns deine Wünsche mit: Größe, Farben, spezielle Anforderungen. Wir beraten dich gerne!</p>
+      </div>
+
+      <div class="ps-step">
+        <div class="step-number">2</div>
+        <h3>Material-Auswahl</h3>
+        <p>Wir wählen das passende Paracord in deinen Wunschfarben und bereiten alles für die Fertigung vor.</p>
+      </div>
+
+      <div class="ps-step">
+        <div class="step-number">3</div>
+        <h3>Handwerkliche Fertigung</h3>
+        <p>Jeder Knoten wird sorgfältig gelegt, jede Länge exakt gemessen. Präzision und Liebe zum Detail.</p>
+      </div>
+
+      <div class="ps-step">
+        <div class="step-number">4</div>
+        <h3>Qualitätskontrolle</h3>
+        <p>Vor der Auslieferung prüfen wir jedes Produkt auf Funktionalität und Ästhetik.</p>
+      </div>
+
+      <div class="ps-step">
+        <div class="step-number">5</div>
+        <h3>Auslieferung</h3>
+        <p>Dein individuelles Paracord-Produkt kommt sicher verpackt bei dir an. Viel Freude damit!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Call to Action -->
+  <div class="ps-cta">
+    <h2>Bereit für dein individuelles Paracord-Produkt?</h2>
+    <p>Lass uns gemeinsam das perfekte Halsband oder die ideale Leine für deinen Hund kreieren.</p>
+    <a href="/collections/hundehalsbaender" class="ps-cta-button"> Jetzt bestellen 🐾 </a>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "About Us",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Einstellungen"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Oberer Abstand",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Unterer Abstand",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Us"
+    }
+  ]
+}
+{% endschema %}

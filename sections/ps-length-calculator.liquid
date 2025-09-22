@@ -1,0 +1,374 @@
+{%- comment -%}
+  Pfotenstore – Längen-Rechner für Paracord-Leinen und Halsbänder
+  Hilft Kunden dabei, die richtige Länge für ihre Hunde zu finden
+{%- endcomment -%}
+
+<style>
+  .ps-calculator {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: #f8f9fa;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .ps-calculator h1 {
+    text-align: center;
+    color: #1e3a8a;
+    margin-bottom: 8px;
+    font-size: 2.5rem;
+  }
+
+  .ps-calculator .subtitle {
+    text-align: center;
+    color: #6b7280;
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+  }
+
+  .ps-calculator-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  .ps-calc-section {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .ps-calc-section h2 {
+    color: #1e3a8a;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ps-form-group {
+    margin-bottom: 20px;
+  }
+
+  .ps-form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #374151;
+  }
+
+  .ps-form-group select,
+  .ps-form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+
+  .ps-form-group select:focus,
+  .ps-form-group input:focus {
+    outline: none;
+    border-color: #1e3a8a;
+  }
+
+  .ps-result {
+    background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .ps-result h3 {
+    margin: 0 0 15px;
+    font-size: 1.3rem;
+  }
+
+  .ps-result .length {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+
+  .ps-tips {
+    background: #fef3c7;
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 30px;
+  }
+
+  .ps-tips h3 {
+    color: #92400e;
+    margin: 0 0 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ps-tips ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #92400e;
+  }
+
+  .ps-tips li {
+    margin-bottom: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .ps-calculator-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .ps-calculator h1 {
+      font-size: 2rem;
+    }
+
+    .ps-calc-section {
+      padding: 20px;
+    }
+  }
+</style>
+
+<div class="ps-calculator">
+  <h1>🐾 Längen-Rechner</h1>
+  <p class="subtitle">Finde die perfekte Länge für deine Paracord-Leine und dein Halsband</p>
+
+  <div class="ps-calculator-grid">
+    <!-- Halsband-Berechnung -->
+    <div class="ps-calc-section">
+      <h2>🔗 Halsband-Länge</h2>
+
+      <div class="ps-form-group">
+        <label for="dog-weight">Gewicht deines Hundes</label>
+        <select id="dog-weight" onchange="calculateLength()">
+          <option value="">Bitte wählen</option>
+          <option value="xs">Bis 5 kg (XS)</option>
+          <option value="s">5-10 kg (S)</option>
+          <option value="m">10-20 kg (M)</option>
+          <option value="l">20-35 kg (L)</option>
+          <option value="xl">Über 35 kg (XL)</option>
+        </select>
+      </div>
+
+      <div class="ps-form-group">
+        <label for="collar-style">Halsband-Typ</label>
+        <select id="collar-style" onchange="calculateLength()">
+          <option value="normal">Standard Halsband</option>
+          <option value="wide">Breites Halsband</option>
+          <option value="martingale">Martingale Halsband</option>
+        </select>
+      </div>
+
+      <div class="ps-form-group">
+        <label for="neck-measurement">Halsumfang (cm) - optional</label>
+        <input type="number" id="neck-measurement" placeholder="z.B. 35" oninput="calculateLength()">
+        <small style="color: #6b7280; font-size: 14px;">Falls du den Halsumfang kennst, für genauere Berechnung</small>
+      </div>
+
+      <div class="ps-result" id="collar-result" style="display: none;">
+        <h3>Empfohlene Halsband-Länge</h3>
+        <div class="length" id="collar-length"></div>
+        <p id="collar-size"></p>
+      </div>
+    </div>
+
+    <!-- Leinen-Berechnung -->
+    <div class="ps-calc-section">
+      <h2>🦮 Leinen-Länge</h2>
+
+      <div class="ps-form-group">
+        <label for="walking-style">Spaziergang-Stil</label>
+        <select id="walking-style" onchange="calculateLength()">
+          <option value="">Bitte wählen</option>
+          <option value="city">Stadtspaziergang</option>
+          <option value="park">Park/Freilauf</option>
+          <option value="hiking">Wandern/Trekking</option>
+          <option value="training">Training/Erziehung</option>
+        </select>
+      </div>
+
+      <div class="ps-form-group">
+        <label for="dog-activity">Hund ist</label>
+        <select id="dog-activity" onchange="calculateLength()">
+          <option value="calm">Ruhig/Gelassen</option>
+          <option value="active">Aktiv/Energisch</option>
+          <option value="puppy">Welpe (im Training)</option>
+          <option value="reactive">Reaktiv/Unruhig</option>
+        </select>
+      </div>
+
+      <div class="ps-form-group">
+        <label for="leash-type">Leinen-Typ</label>
+        <select id="leash-type" onchange="calculateLength()">
+          <option value="standard">Standard-Leine</option>
+          <option value="retractable">Ausziehbare Leine</option>
+          <option value="training">Trainings-Leine</option>
+        </select>
+      </div>
+
+      <div class="ps-result" id="leash-result" style="display: none;">
+        <h3>Empfohlene Leinen-Länge</h3>
+        <div class="length" id="leash-length"></div>
+        <p id="leash-info"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ps-tips">
+    <h3>💡 Tipps für die perfekte Passform</h3>
+    <ul>
+      <li><strong>Halsband:</strong> Du solltest 2 Finger zwischen Hals und Halsband stecken können</li>
+      <li><strong>Leine:</strong> Bei Welpen beginne mit kürzeren Leinen für bessere Kontrolle</li>
+      <li><strong>Messung:</strong> Miss den Halsumfang an der breitesten Stelle</li>
+      <li><strong>Wachstum:</strong> Bei jungen Hunden plane 2-3 cm Spielraum ein</li>
+      <li><strong>Material:</strong> Paracord passt sich an und wird mit der Zeit etwas weicher</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function calculateLength() {
+    // Halsband-Berechnung
+    const dogWeight = document.getElementById('dog-weight').value;
+    const collarStyle = document.getElementById('collar-style').value;
+    const neckMeasurement = document.getElementById('neck-measurement').value;
+
+    if (dogWeight) {
+      let collarLength = '';
+      let collarSize = '';
+
+      if (neckMeasurement && neckMeasurement > 0) {
+        // Präzise Berechnung basierend auf Halsumfang
+        const baseLength = parseInt(neckMeasurement);
+        const styleAdjustment = collarStyle === 'wide' ? 3 : collarStyle === 'martingale' ? 5 : 0;
+        collarLength = baseLength + styleAdjustment + ' cm';
+        collarSize = 'Basierend auf deiner Messung';
+      } else {
+        // Standard-Berechnung basierend auf Gewicht
+        const sizeMap = {
+          xs: { length: '28-32 cm', size: 'XS (25-30 cm)' },
+          s: { length: '33-37 cm', size: 'S (30-35 cm)' },
+          m: { length: '38-42 cm', size: 'M (35-40 cm)' },
+          l: { length: '43-47 cm', size: 'L (40-45 cm)' },
+          xl: { length: '48-52 cm', size: 'XL (45-50 cm)' },
+        };
+
+        collarLength = sizeMap[dogWeight].length;
+        collarSize = sizeMap[dogWeight].size;
+      }
+
+      document.getElementById('collar-length').textContent = collarLength;
+      document.getElementById('collar-size').textContent = collarSize;
+      document.getElementById('collar-result').style.display = 'block';
+    }
+
+    // Leinen-Berechnung
+    const walkingStyle = document.getElementById('walking-style').value;
+    const dogActivity = document.getElementById('dog-activity').value;
+    const leashType = document.getElementById('leash-type').value;
+
+    if (walkingStyle && dogActivity && leashType) {
+      let leashLength = '';
+      let leashInfo = '';
+
+      // Basis-Längen je nach Spaziergang-Stil
+      const baseLengths = {
+        city: 120,
+        park: 200,
+        hiking: 300,
+        training: 150,
+      };
+
+      // Aktivitäts-Anpassungen
+      const activityAdjustments = {
+        calm: 0,
+        active: 50,
+        puppy: -50,
+        reactive: -30,
+      };
+
+      // Leinen-Typ Anpassungen
+      const leashAdjustments = {
+        standard: 0,
+        retractable: 200,
+        training: -30,
+      };
+
+      let calculatedLength = baseLengths[walkingStyle] + activityAdjustments[dogActivity] + leashAdjustments[leashType];
+
+      // Mindestlänge sicherstellen
+      calculatedLength = Math.max(calculatedLength, 100);
+
+      leashLength = (calculatedLength / 100).toFixed(1) + ' m';
+
+      // Zusätzliche Infos
+      if (leashType === 'retractable') {
+        leashInfo = 'Ausziehbare Leine - maximale Länge';
+      } else if (walkingStyle === 'training') {
+        leashInfo = 'Perfekt für Training und Erziehung';
+      } else if (walkingStyle === 'hiking') {
+        leashInfo = 'Ideal für Wanderungen und große Freiflächen';
+      } else {
+        leashInfo = 'Standard-Leine für ' + (walkingStyle === 'city' ? 'Stadtspaziergänge' : 'Park und Freilauf');
+      }
+
+      document.getElementById('leash-length').textContent = leashLength;
+      document.getElementById('leash-info').textContent = leashInfo;
+      document.getElementById('leash-result').style.display = 'block';
+    }
+  }
+
+  // Initiale Berechnung wenn alle Felder ausgefüllt sind
+  document.addEventListener('DOMContentLoaded', function () {
+    calculateLength();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Längen-Rechner",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Einstellungen"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Oberer Abstand",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Unterer Abstand",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Längen-Rechner"
+    }
+  ]
+}
+{% endschema %}
