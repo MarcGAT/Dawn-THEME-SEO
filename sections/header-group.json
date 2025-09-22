@@ -14,31 +14,22 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "blocks": {
-        "announcement-bar-0": {
+        "announcement_BqnAmj": {
           "type": "announcement",
           "settings": {
-            "text": "Welcome to our store",
+            "text": "🐾 Hundehalsbänder nach Maß aus Paracord",
             "link": "",
             "text_style": "normal"
           }
         }
       },
       "block_order": [
-        "announcement-bar-0"
+        "announcement_BqnAmj"
       ],
       "settings": {
-        "enable_marquee_style": true,
-        "background_color": "#1e3a8a",
-        "text_color": "#ffffff",
-        "font_size": 16,
-        "mobile_font_size": 14,
-        "scroll_speed": 30,
-        "item_gap": 8,
-        "mobile_item_gap": 4,
-        "vertical_padding": 14,
         "auto_rotate": false,
         "change_slides_speed": 5,
-        "color_scheme": "",
+        "color_scheme": "scheme-1",
         "show_line_separator": true,
         "show_social": false,
         "enable_country_selector": false,
