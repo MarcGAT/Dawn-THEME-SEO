@@ -1,24 +1,147 @@
 {%- comment -%}
   Pfotenstore – Paracord Konfigurator (Dawn)
   Fügt Line Item Properties für maßgeschneiderte Leine/Halsband hinzu.
+
+  Verwendung:
+  {% render 'ps-paracord-customizer', product: product %}
 {%- endcomment -%}
 
+{%- comment -%} Prüfe ob der Customizer für dieses Produkt angezeigt werden soll {%- endcomment -%}
+{%- assign show_customizer = false -%}
+
+{%- comment -%} Wenn display_method übergeben wird, verwende diese Logik {%- endcomment -%}
+{%- if display_method -%}
+  {%- case display_method -%}
+    {%- when 'manual' -%}
+      {%- assign show_customizer = true -%}
+    {%- when 'tag' -%}
+      {%- if required_tags != blank -%}
+        {%- assign tag_list = required_tags | split: ',' -%}
+        {%- for tag in tag_list -%}
+          {%- assign clean_tag = tag | strip -%}
+          {%- if product.tags contains clean_tag -%}
+            {%- assign show_customizer = true -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- when 'collection' -%}
+      {%- if required_collections != blank -%}
+        {%- assign collection_list = required_collections | split: ',' -%}
+        {%- for collection_handle in collection_list -%}
+          {%- assign clean_collection = collection_handle | strip -%}
+          {%- for collection in product.collections -%}
+            {%- if collection.handle == clean_collection -%}
+              {%- assign show_customizer = true -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if show_customizer -%}{%- break -%}{%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- when 'auto' -%}
+      {%- comment -%} Automatische Erkennung {%- endcomment -%}
+      {%- if product.metafields.custom.enable_paracord_customizer == true -%}
+        {%- assign show_customizer = true -%}
+      {%- elsif product.tags contains 'paracord-customizer' -%}
+        {%- assign show_customizer = true -%}
+      {%- elsif product.type contains 'paracord' or product.type contains 'leash' or product.type contains 'collar' -%}
+        {%- assign show_customizer = true -%}
+      {%- else -%}
+        {%- for collection in product.collections -%}
+          {%- if collection.handle contains 'paracord'
+            or collection.handle contains 'hundehalsbaender'
+            or collection.handle contains 'leinen'
+          -%}
+            {%- assign show_customizer = true -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+  {%- endcase -%}
+{%- else -%}
+  {%- comment -%} Fallback: Automatische Erkennung {%- endcomment -%}
+  {%- if product.metafields.custom.enable_paracord_customizer == true -%}
+    {%- assign show_customizer = true -%}
+  {%- elsif product.tags contains 'paracord-customizer' -%}
+    {%- assign show_customizer = true -%}
+  {%- elsif product.type contains 'paracord' or product.type contains 'leash' or product.type contains 'collar' -%}
+    {%- assign show_customizer = true -%}
+  {%- else -%}
+    {%- for collection in product.collections -%}
+      {%- if collection.handle contains 'paracord'
+        or collection.handle contains 'hundehalsbaender'
+        or collection.handle contains 'leinen'
+      -%}
+        {%- assign show_customizer = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- unless show_customizer -%}
+  {%- comment -%} Customizer wird nicht angezeigt {%- endcomment -%}
+  {%- return -%}
+{%- endunless -%}
+
 <style>
-  .ps-cust{border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin:16px 0;background:#fafafa}
-  .ps-cust h4{margin:0 0 8px;font-size:16px}
-  .ps-cust .grid{display:grid;gap:12px}
-  .ps-cust label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
-  .ps-cust select,.ps-cust input[type="text"],.ps-cust textarea{
-    width:100%;border:1px solid #d1d5db;border-radius:8px;padding:10px 12px;font-size:14px;background:#fff
+  .ps-cust {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+    background: #fafafa;
   }
-  .ps-cust .row{display:grid;gap:12px;grid-template-columns:1fr 1fr}
-  .ps-cust small{color:#6b7280;font-size:12px}
-  .ps-preview{margin-top:10px;font-size:13px;color:#374151}
-  @media (max-width: 720px){ .ps-cust .row{grid-template-columns:1fr} }
+  .ps-cust h4 {
+    margin: 0 0 8px;
+    font-size: 16px;
+  }
+  .ps-cust .grid {
+    display: grid;
+    gap: 12px;
+  }
+  .ps-cust label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .ps-cust select,
+  .ps-cust input[type='text'],
+  .ps-cust textarea {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    background: #fff;
+  }
+  .ps-cust .row {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+  }
+  .ps-cust small {
+    color: #6b7280;
+    font-size: 12px;
+  }
+  .ps-preview {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #374151;
+  }
+  @media (max-width: 720px) {
+    .ps-cust .row {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
 
 <div id="ps-customizer" class="ps-cust">
-  <h4>🎨 Dein Jasmin-Set konfigurieren</h4>
+  <h4>
+    {% if customizer_title != blank %}{{ customizer_title }}{% else %}🎨 Dein Jasmin-Set konfigurieren{% endif %}
+  </h4>
   <div class="grid">
     <div class="row">
       <div>
@@ -68,13 +191,24 @@
       </div>
       <div>
         <label for="ps-phone">Gravur – Telefon (optional)</label>
-        <input id="ps-phone" type="text" name="properties[Gravur Telefon]" maxlength="20" placeholder="z. B. +41 79 123 45 67">
+        <input
+          id="ps-phone"
+          type="text"
+          name="properties[Gravur Telefon]"
+          maxlength="20"
+          placeholder="z. B. +41 79 123 45 67"
+        >
       </div>
     </div>
 
     <div>
       <label for="ps-notes">Hinweise (Farben, Sonderwünsche)</label>
-      <textarea id="ps-notes" name="properties[Hinweise]" rows="3" placeholder="Z. B. Farbtausch, Ring in Gold, besondere Wünsche …"></textarea>
+      <textarea
+        id="ps-notes"
+        name="properties[Hinweise]"
+        rows="3"
+        placeholder="Z. B. Farbtausch, Ring in Gold, besondere Wünsche …"
+      ></textarea>
     </div>
 
     <div class="ps-preview" aria-live="polite">
@@ -85,62 +219,64 @@
 </div>
 
 <script>
-(function(){
-  // Sicherstellen, dass der Customizer IM Add-to-Cart-Formular sitzt (Dawn nutzt <product-form><form>…)
-  function moveCustomizerIntoForm(){
-    try{
-      var form = document.querySelector('product-form form') || document.querySelector('form[action*="/cart/add"]');
-      var box  = document.getElementById('ps-customizer');
-      if(form && box && !form.contains(box)){
-        var atc = form.querySelector('[type="submit"]') || form.querySelector('button[type="submit"]');
-        atc ? form.insertBefore(box, atc) : form.appendChild(box);
-        console.log('PS Customizer: In Form integriert');
+  (function () {
+    // Sicherstellen, dass der Customizer IM Add-to-Cart-Formular sitzt (Dawn nutzt <product-form><form>…)
+    function moveCustomizerIntoForm() {
+      try {
+        var form = document.querySelector('product-form form') || document.querySelector('form[action*="/cart/add"]');
+        var box = document.getElementById('ps-customizer');
+        if (form && box && !form.contains(box)) {
+          var atc = form.querySelector('[type="submit"]') || form.querySelector('button[type="submit"]');
+          atc ? form.insertBefore(box, atc) : form.appendChild(box);
+          console.log('PS Customizer: In Form integriert');
+        }
+      } catch (e) {
+        console.error('PS Customizer Fehler:', e);
       }
-    }catch(e){
-      console.error('PS Customizer Fehler:', e);
     }
-  }
-  function updatePreview(){
-    var length = document.getElementById('ps-length')?.value || '';
-    var karabiner = document.getElementById('ps-karabiner')?.value || '';
-    var color = document.getElementById('ps-color')?.value || '';
-    var halsband = document.getElementById('ps-halsband')?.value || '';
-    
-    var t = [
-      length ? 'Leine: ' + length : '',
-      karabiner ? 'Karabiner: ' + karabiner : '',
-      color ? 'Farbschema: ' + color : '',
-      halsband ? 'Halsband: ' + halsband : ''
-    ].filter(Boolean).join(' • ');
-    
-    var el = document.getElementById('ps-preview-text');
-    if(el) el.textContent = t || 'Bitte wähle deine Optionen';
-  }
-  // Event-Listener für verschiedene Shopify-Events
-  ['DOMContentLoaded','shopify:section:load','shopify:section:select'].forEach(function(evt){
-    document.addEventListener(evt, function(){ 
-      setTimeout(function(){
-        moveCustomizerIntoForm(); 
-        updatePreview();
-        attachEventListeners();
-      }, 100);
+    function updatePreview() {
+      var length = document.getElementById('ps-length')?.value || '';
+      var karabiner = document.getElementById('ps-karabiner')?.value || '';
+      var color = document.getElementById('ps-color')?.value || '';
+      var halsband = document.getElementById('ps-halsband')?.value || '';
+
+      var t = [
+        length ? 'Leine: ' + length : '',
+        karabiner ? 'Karabiner: ' + karabiner : '',
+        color ? 'Farbschema: ' + color : '',
+        halsband ? 'Halsband: ' + halsband : '',
+      ]
+        .filter(Boolean)
+        .join(' • ');
+
+      var el = document.getElementById('ps-preview-text');
+      if (el) el.textContent = t || 'Bitte wähle deine Optionen';
+    }
+    // Event-Listener für verschiedene Shopify-Events
+    ['DOMContentLoaded', 'shopify:section:load', 'shopify:section:select'].forEach(function (evt) {
+      document.addEventListener(evt, function () {
+        setTimeout(function () {
+          moveCustomizerIntoForm();
+          updatePreview();
+          attachEventListeners();
+        }, 100);
+      });
     });
-  });
-  
-  // Event-Listener für Customizer-Felder
-  function attachEventListeners(){
-    ['ps-length','ps-karabiner','ps-color','ps-halsband'].forEach(function(id){
-      var el = document.getElementById(id);
-      if(el) {
-        el.addEventListener('change', updatePreview);
-        el.addEventListener('input', updatePreview);
-      }
-    });
-  }
-  
-  // Initiale Ausführung
-  moveCustomizerIntoForm(); 
-  updatePreview();
-  attachEventListeners();
-})();
+
+    // Event-Listener für Customizer-Felder
+    function attachEventListeners() {
+      ['ps-length', 'ps-karabiner', 'ps-color', 'ps-halsband'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('change', updatePreview);
+          el.addEventListener('input', updatePreview);
+        }
+      });
+    }
+
+    // Initiale Ausführung
+    moveCustomizerIntoForm();
+    updatePreview();
+    attachEventListeners();
+  })();
 </script>

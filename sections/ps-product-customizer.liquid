@@ -1,0 +1,89 @@
+{%- comment -%}
+  Pfotenstore – Produkt Customizer Section
+  Kann als Block zu Product Templates hinzugefügt werden
+{%- endcomment -%}
+
+{%- if section.settings.enable_customizer -%}
+  {%- render 'ps-paracord-customizer',
+    product: product,
+    display_method: section.settings.display_method,
+    required_tags: section.settings.required_tags,
+    required_collections: section.settings.required_collections,
+    customizer_title: section.settings.customizer_title
+  -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Paracord Customizer",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Paracord Customizer Einstellungen"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_customizer",
+      "label": "Paracord Customizer aktivieren",
+      "info": "Zeigt den Customizer für dieses Produkt an",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "customizer_title",
+      "label": "Titel des Customizers",
+      "default": "🎨 Dein Paracord-Set konfigurieren",
+      "info": "Leer lassen für Standard-Titel"
+    },
+    {
+      "type": "header",
+      "content": "Anzeige-Einstellungen"
+    },
+    {
+      "type": "select",
+      "id": "display_method",
+      "label": "Anzeige-Methode",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Automatisch (basierend auf Produkt-Eigenschaften)"
+        },
+        {
+          "value": "manual",
+          "label": "Manuell (immer anzeigen wenn aktiviert)"
+        },
+        {
+          "value": "tag",
+          "label": "Nur bei bestimmten Tags"
+        },
+        {
+          "value": "collection",
+          "label": "Nur bei bestimmten Collections"
+        }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "text",
+      "id": "required_tags",
+      "label": "Erforderliche Tags (kommagetrennt)",
+      "info": "Nur bei 'Nur bei bestimmten Tags' relevant. z.B.: paracord, customizer, leash",
+      "placeholder": "paracord, customizer"
+    },
+    {
+      "type": "text",
+      "id": "required_collections",
+      "label": "Erforderliche Collections (kommagetrennt)",
+      "info": "Nur bei 'Nur bei bestimmten Collections' relevant. z.B.: hundehalsbaender, leinen",
+      "placeholder": "hundehalsbaender, leinen"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Paracord Customizer"
+    }
+  ]
+}
+{% endschema %}
