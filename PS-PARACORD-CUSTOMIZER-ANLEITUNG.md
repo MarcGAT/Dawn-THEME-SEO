@@ -106,3 +106,6 @@ Bei Problemen oder Fragen zur Integration, überprüfe:
 2. Shopify Theme-Editor Logs
 3. Cart API Responses in den Entwicklertools
 
+
+
+

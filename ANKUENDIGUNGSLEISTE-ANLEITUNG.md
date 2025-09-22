@@ -157,3 +157,6 @@ Die Ankündigungsleiste ist automatisch für mobile Geräte optimiert:
 
 Die neue Marquee-Ankündigungsleiste macht deinen Shop moderner und auffälliger! 🚀
 
+
+
+
