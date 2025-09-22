@@ -3,27 +3,123 @@
 
 <style>
   :root{
-    --ps-bg:{{ section.settings.background_color | default: '#1e3a8a' }};     /* Hintergrund */
-    --ps-fg:{{ section.settings.text_color | default: '#ffffff' }};     /* Textfarbe   */
-    --ps-size:{{ section.settings.font_size | default: '16' }}px;      /* Schriftgr.  */
-    --ps-speed:{{ section.settings.scroll_speed | default: '30' }}s;      /* Lauftempo   */
-    --ps-gap:{{ section.settings.item_gap | default: '18' }}rem;      /* Abstand zw. Messages */
-    --ps-pad:{{ section.settings.vertical_padding | default: '14' }}px;       /* vert. Padding */
+    --ps-bg:{{ section.settings.background_color | default: '#1e3a8a' }};
+    --ps-fg:{{ section.settings.text_color | default: '#ffffff' }};
+    --ps-size:{{ section.settings.font_size | default: '16' }}px;
+    --ps-speed:{{ section.settings.scroll_speed | default: '30' }}s;
+    --ps-gap:{{ section.settings.item_gap | default: '18' }}rem;
+    --ps-pad:{{ section.settings.vertical_padding | default: '14' }}px;
+    --ps-gradient:{{ section.settings.gradient_enabled | default: false }};
+    --ps-gradient-start:{{ section.settings.gradient_start | default: '#1e3a8a' }};
+    --ps-gradient-end:{{ section.settings.gradient_end | default: '#3b82f6' }};
+    --ps-shadow:{{ section.settings.enable_shadow | default: false }};
+    --ps-glow:{{ section.settings.enable_glow | default: false }};
+    --ps-emoji-size:{{ section.settings.emoji_size | default: '1.2' }};
+    --ps-bounce:{{ section.settings.enable_bounce | default: false }};
   }
-  .ps-onebar{background:var(--ps-bg);color:var(--ps-fg);border:none;overflow:hidden;font-weight:700;font-size:var(--ps-size);width:100vw;margin-left:calc(-50vw + 50%);position:relative;z-index:10;box-sizing:border-box}
-  .ps-track{display:flex;gap:var(--ps-gap);white-space:nowrap;animation:ps-marquee var(--ps-speed) linear infinite;will-change:transform;padding:var(--ps-pad) 20px;min-width:200vw;box-sizing:border-box}
-  .ps-item{display:flex;align-items:center;flex-shrink:0}
-  .ps-item a{color:inherit;text-decoration:underline}
-  .ps-item a:hover{text-decoration:none;opacity:0.8}
-  @keyframes ps-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  @media(max-width:640px){:root{--ps-size:{{ section.settings.mobile_font_size | default: '14' }}px;--ps-gap:{{ section.settings.mobile_item_gap | default: '10' }}rem}}
 
-  /* Pause bei Hover */
-  .ps-track:hover{animation-play-state:paused}
+  .ps-onebar{
+    {% if section.settings.gradient_enabled %}background: linear-gradient(90deg, var(--ps-gradient-start), var(--ps-gradient-end));{% else %}background: var(--ps-bg);{% endif %}
+    color: var(--ps-fg);
+    border: none;
+    overflow: hidden;
+    font-weight: 700;
+    font-size: var(--ps-size);
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    position: relative;
+    z-index: 10;
+    box-sizing: border-box;
+    {% if section.settings.enable_shadow %}box-shadow: 0 4px 15px rgba(0,0,0,0.2);{% endif %}
+  }
+
+  .ps-track{
+    display: flex;
+    gap: var(--ps-gap);
+    white-space: nowrap;
+    animation: ps-marquee var(--ps-speed) linear infinite;
+    will-change: transform;
+    padding: var(--ps-pad) 20px;
+    min-width: 200vw;
+    box-sizing: border-box;
+  }
+
+  .ps-item{
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .ps-item a{
+    color: inherit;
+    text-decoration: underline;
+    transition: all 0.3s ease;
+  }
+
+  .ps-item a:hover{
+    text-decoration: none;
+    opacity: 0.8;
+    {% if section.settings.enable_glow %}text-shadow: 0 0 10px currentColor;{% endif %}
+    transform: scale(1.05);
+  }
+
+  /* Emoji-Styling */
+  .ps-item .emoji{
+    font-size: calc(var(--ps-size) * var(--ps-emoji-size));
+    margin-right: 0.3em;
+    display: inline-block;
+    {% if section.settings.enable_bounce %}animation: ps-bounce 2s ease-in-out infinite;{% endif %}
+  }
+
+  /* Bounce-Animation für Emojis */
+  @keyframes ps-bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-3px); }
+    60% { transform: translateY(-2px); }
+  }
+
+  /* Marquee-Animation mit verschiedenen Richtungen */
+  @keyframes ps-marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @keyframes ps-marquee-reverse {
+    from { transform: translateX(-50%); }
+    to { transform: translateX(0); }
+  }
+
+  /* Richtung umkehren wenn gewünscht */
+  {% if section.settings.reverse_direction %}
+  .ps-track { animation: ps-marquee-reverse var(--ps-speed) linear infinite; }
+  {% endif %}
+
+  @media(max-width:640px){
+    :root{
+      --ps-size:{{ section.settings.mobile_font_size | default: '14' }}px;
+      --ps-gap:{{ section.settings.mobile_item_gap | default: '10' }}rem;
+      --ps-emoji-size:{{ section.settings.mobile_emoji_size | default: '1.1' }};
+    }
+  }
+
+  /* Pause bei Hover mit sanfter Verlangsamung */
+  .ps-track:hover{
+    animation-play-state: paused;
+    transition: all 0.3s ease;
+  }
+
+  /* Glow-Effekt für Text */
+  {% if section.settings.enable_glow %}
+  .ps-item {
+    text-shadow: 0 0 5px rgba(255,255,255,0.3);
+  }
+  {% endif %}
 
   /* Bessere Barrierefreiheit */
   @media (prefers-reduced-motion: reduce) {
     .ps-track{animation:none}
+    .ps-item .emoji{animation:none}
   }
 
   /* Sicherstellen, dass die Leiste über allem liegt */
@@ -49,6 +145,31 @@
   @media screen and (max-width: 749px) {
     .ps-onebar{margin-left:calc(-50vw + 50%);width:100vw}
   }
+
+  /* Spezielle Styling-Optionen für verschiedene Text-Stile */
+  .ps-item.highlight {
+    background: rgba(255,255,255,0.2);
+    padding: 2px 8px;
+    border-radius: 4px;
+    backdrop-filter: blur(10px);
+  }
+
+  .ps-item.bold {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Pulse-Effekt für wichtige Ankündigungen */
+  .ps-item.pulse {
+    animation: ps-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes ps-pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+  }
 </style>
 
 {%- if section.settings.enable_marquee and section.blocks.size > 0 -%}
@@ -56,11 +177,52 @@
     <div class="ps-track">
       {%- for block in section.blocks -%}
         {%- if block.settings.text != blank -%}
-          <div class="ps-item">
+          {%- liquid
+            assign text_content = block.settings.text
+            assign text_style = block.settings.text_style | default: 'normal'
+            assign item_classes = 'ps-item'
+
+            case text_style
+              when 'bold'
+                assign item_classes = item_classes | append: ' bold'
+              when 'highlight'
+                assign item_classes = item_classes | append: ' highlight'
+              when 'pulse'
+                assign item_classes = item_classes | append: ' pulse'
+            endcase
+
+            # Emoji-Erkennung und -Extraktion
+            assign text_with_emoji = text_content | split: ' '
+            assign emoji_found = false
+            assign clean_text = ''
+            assign emoji_part = ''
+
+            for word in text_with_emoji
+              if word contains '🐾' or word contains '🎨' or word contains '🤲' or word contains '🚚' or word contains '⚡' or word contains '🔄' or word contains '💎' or word contains '🌟' or word contains '🎯' or word contains '🏆' or word contains '💫' or word contains '🔥'
+                assign emoji_found = true
+                assign emoji_part = word
+                assign clean_text = text_content | remove: word | strip
+                break
+              endif
+            endfor
+
+            if emoji_found == false
+              assign clean_text = text_content
+            endif
+          -%}
+          <div class="{{ item_classes }}">
             {%- if block.settings.link != blank -%}
-              <a href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
+              <a href="{{ block.settings.link }}">
+                {%- if emoji_found -%}
+                  <span class="emoji">{{ emoji_part }}</span>
+                {%- endif -%}
+                {{ clean_text | escape }}
+              </a>
             {%- else -%}
-              {{ block.settings.text | escape }}
+              {%- if emoji_found -%}
+                <span class="emoji">{{ emoji_part }}</span>
+              {%- endif -%}
+              {{ clean_text | escape }}
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -68,11 +230,52 @@
       {%- comment -%} Duplizieren für nahtlosen Loop {%- endcomment -%}
       {%- for block in section.blocks -%}
         {%- if block.settings.text != blank -%}
-          <div class="ps-item">
+          {%- liquid
+            assign text_content = block.settings.text
+            assign text_style = block.settings.text_style | default: 'normal'
+            assign item_classes = 'ps-item'
+
+            case text_style
+              when 'bold'
+                assign item_classes = item_classes | append: ' bold'
+              when 'highlight'
+                assign item_classes = item_classes | append: ' highlight'
+              when 'pulse'
+                assign item_classes = item_classes | append: ' pulse'
+            endcase
+
+            # Emoji-Erkennung und -Extraktion
+            assign text_with_emoji = text_content | split: ' '
+            assign emoji_found = false
+            assign clean_text = ''
+            assign emoji_part = ''
+
+            for word in text_with_emoji
+              if word contains '🐾' or word contains '🎨' or word contains '🤲' or word contains '🚚' or word contains '⚡' or word contains '🔄' or word contains '💎' or word contains '🌟' or word contains '🎯' or word contains '🏆' or word contains '💫' or word contains '🔥'
+                assign emoji_found = true
+                assign emoji_part = word
+                assign clean_text = text_content | remove: word | strip
+                break
+              endif
+            endfor
+
+            if emoji_found == false
+              assign clean_text = text_content
+            endif
+          -%}
+          <div class="{{ item_classes }}">
             {%- if block.settings.link != blank -%}
-              <a href="{{ block.settings.link }}">{{ block.settings.text | escape }}</a>
+              <a href="{{ block.settings.link }}">
+                {%- if emoji_found -%}
+                  <span class="emoji">{{ emoji_part }}</span>
+                {%- endif -%}
+                {{ clean_text | escape }}
+              </a>
             {%- else -%}
-              {{ block.settings.text | escape }}
+              {%- if emoji_found -%}
+                <span class="emoji">{{ emoji_part }}</span>
+              {%- endif -%}
+              {{ clean_text | escape }}
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -331,6 +534,70 @@
     },
     {
       "type": "header",
+      "content": "🎨 Erweiterte Design-Optionen"
+    },
+    {
+      "type": "checkbox",
+      "id": "gradient_enabled",
+      "label": "Gradient-Hintergrund aktivieren",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "gradient_start",
+      "label": "Gradient Startfarbe",
+      "default": "#1e3a8a"
+    },
+    {
+      "type": "color",
+      "id": "gradient_end",
+      "label": "Gradient Endfarbe",
+      "default": "#3b82f6"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_shadow",
+      "label": "Schatten-Effekt aktivieren",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_glow",
+      "label": "Glow-Effekt für Text aktivieren",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_bounce",
+      "label": "Bounce-Animation für Emojis",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse_direction",
+      "label": "Laufrichtung umkehren (rechts nach links)",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "emoji_size",
+      "label": "Emoji-Größe (Multiplikator)",
+      "min": 0.8,
+      "max": 2.0,
+      "step": 0.1,
+      "default": 1.2
+    },
+    {
+      "type": "range",
+      "id": "mobile_emoji_size",
+      "label": "Emoji-Größe mobil (Multiplikator)",
+      "min": 0.8,
+      "max": 1.8,
+      "step": 0.1,
+      "default": 1.1
+    },
+    {
+      "type": "header",
       "content": "⚙️ Einstellungen"
     },
     {
@@ -420,14 +687,26 @@
             },
             {
               "value": "bold",
-              "label": "Fett"
+              "label": "Fett & Großbuchstaben"
             },
             {
               "value": "highlight",
-              "label": "Hervorhebung"
+              "label": "Hervorhebung mit Hintergrund"
+            },
+            {
+              "value": "pulse",
+              "label": "Pulse-Effekt (wichtig)"
             }
           ],
           "default": "normal"
+        },
+        {
+          "type": "header",
+          "content": "🎯 Emoji-Tipps"
+        },
+        {
+          "type": "paragraph",
+          "content": "Beliebte Emojis für verschiedene Kategorien:<br/>🐾 Hundeprodukte | 🎨 Design/Farben | 🤲 Handarbeit<br/>🚚 Versand | ⚡ Schnelligkeit | 🔄 Service<br/>💎 Premium | 🌟 Highlights | 🎯 Angebote<br/>🏆 Qualität | 💫 Magie | 🔥 Sale"
         }
       ]
     }
@@ -440,37 +719,57 @@
           "type": "announcement",
           "settings": {
             "text": "🐾 Hundehalsbänder nach Maß aus Paracord",
-            "link": "/collections/hundehalsbaender"
+            "link": "/collections/hundehalsbaender",
+            "text_style": "normal"
           }
         },
         {
           "type": "announcement",
           "settings": {
-            "text": "🎨 Viele Farben & Größen – passend zu Leinen"
+            "text": "🎨 Viele Farben & Größen – passend zu Leinen",
+            "text_style": "highlight"
           }
         },
         {
           "type": "announcement",
           "settings": {
-            "text": "🤲 Handgemacht in der Schweiz"
+            "text": "🤲 Handgemacht in der Schweiz",
+            "text_style": "bold"
           }
         },
         {
           "type": "announcement",
           "settings": {
-            "text": "🚚 Gratis Versand ab 130 CHF"
+            "text": "🚚 Gratis Versand ab 130 CHF",
+            "text_style": "pulse"
           }
         },
         {
           "type": "announcement",
           "settings": {
-            "text": "⚡ Lieferung in 2–3 Werktagen"
+            "text": "⚡ Lieferung in 2–3 Werktagen",
+            "text_style": "normal"
           }
         },
         {
           "type": "announcement",
           "settings": {
-            "text": "🔄 30 Tage Geld-zurück-Garantie"
+            "text": "🔄 30 Tage Geld-zurück-Garantie",
+            "text_style": "bold"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "💎 Premium Qualität für Ihren Liebling",
+            "text_style": "highlight"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "🌟 Neu: Personalisierte Gravur verfügbar",
+            "text_style": "pulse"
           }
         }
       ]

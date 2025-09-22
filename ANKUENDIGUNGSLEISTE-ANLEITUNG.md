@@ -10,13 +10,29 @@ Die Ankündigungsleiste wurde mit einem modernen Marquee-Style (Laufschrift) ver
 - **Hover-Pause**: Animation stoppt beim Überfahren mit der Maus
 - **Responsive**: Angepasste Einstellungen für Desktop und Mobile
 - **Barrierefreiheit**: Respektiert `prefers-reduced-motion`
+- **Richtung umkehrbar**: Von links nach rechts oder umgekehrt
 
 ### 🎨 Vollständig anpassbar
 - **Hintergrundfarbe**: Beliebig änderbar
+- **Gradient-Hintergrund**: Zweifarbige Verläufe möglich
 - **Textfarbe**: Kontrastierend einstellbar
 - **Schriftgröße**: Separate Einstellungen für Desktop/Mobile
 - **Laufgeschwindigkeit**: Von 15s bis 60s einstellbar
 - **Abstände**: Zwischen Items und vertikal anpassbar
+- **Schatten-Effekt**: Subtiler Schatten für Tiefe
+- **Glow-Effekt**: Leuchtender Text für Aufmerksamkeit
+
+### 🎭 Erweiterte Emoji-Features
+- **Intelligente Emoji-Erkennung**: Automatische Extraktion und Styling
+- **Bounce-Animation**: Emojis hüpfen sanft
+- **Anpassbare Größe**: Emojis können größer/kleiner gemacht werden
+- **Separate Mobile-Größe**: Optimiert für verschiedene Bildschirmgrößen
+
+### 🎪 Text-Styling-Optionen
+- **Normal**: Standard-Darstellung
+- **Fett & Großbuchstaben**: Für wichtige Botschaften
+- **Hervorhebung**: Mit transparentem Hintergrund
+- **Pulse-Effekt**: Für besonders wichtige Ankündigungen
 
 ## 🚀 So verwendest du es
 
@@ -39,22 +55,38 @@ Unter **"🎨 Marquee-Style Ankündigungsleiste"**:
 - **Laufgeschwindigkeit**: 15-60 Sekunden (Standard: 30s)
 - **Abstände**: Zwischen Items und vertikal einstellbar
 
+Unter **"🎨 Erweiterte Design-Optionen"**:
+- **Gradient-Hintergrund aktivieren**: Für moderne Verläufe
+- **Gradient Start-/Endfarbe**: Zwei Farben für den Verlauf
+- **Schatten-Effekt**: Subtiler Schatten für Tiefe
+- **Glow-Effekt**: Leuchtender Text für Aufmerksamkeit
+- **Bounce-Animation**: Emojis hüpfen sanft (Standard: aktiviert)
+- **Laufrichtung umkehren**: Von rechts nach links
+- **Emoji-Größe**: Multiplikator für Emoji-Größe (Standard: 1.2x)
+- **Emoji-Größe mobil**: Separate Einstellung für Mobile (Standard: 1.1x)
+
 ### 4. Ankündigungen hinzufügen/bearbeiten
 - Klicke auf **"Ankündigung hinzufügen"**
-- **Text eingeben**: Emojis funktionieren direkt: 🐾 🎨 🤲 🚚 ⚡ 🔄
+- **Text eingeben**: Emojis funktionieren direkt: 🐾 🎨 🤲 🚚 ⚡ 🔄 💎 🌟 🎯 🏆 💫 🔥
 - **Link hinzufügen** (optional): Macht den Text anklickbar
-- **Text-Stil wählen**: Normal, Fett oder Hervorhebung
+- **Text-Stil wählen**: 
+  - **Normal**: Standard-Darstellung
+  - **Fett & Großbuchstaben**: Für wichtige Botschaften
+  - **Hervorhebung**: Mit transparentem Hintergrund
+  - **Pulse-Effekt**: Für besonders wichtige Ankündigungen
 
 ## 📝 Vorgefertigte Ankündigungen
 
-Das Preset enthält bereits optimierte Ankündigungen:
+Das Preset enthält bereits optimierte Ankündigungen mit verschiedenen Styling-Optionen:
 
-1. **🐾 Hundehalsbänder nach Maß aus Paracord** (mit Link)
-2. **🎨 Viele Farben & Größen – passend zu Leinen**
-3. **🤲 Handgemacht in der Schweiz**
-4. **🚚 Gratis Versand ab 130 CHF**
-5. **⚡ Lieferung in 2–3 Werktagen**
-6. **🔄 30 Tage Geld-zurück-Garantie**
+1. **🐾 Hundehalsbänder nach Maß aus Paracord** (Normal, mit Link)
+2. **🎨 Viele Farben & Größen – passend zu Leinen** (Hervorhebung)
+3. **🤲 Handgemacht in der Schweiz** (Fett & Großbuchstaben)
+4. **🚚 Gratis Versand ab 130 CHF** (Pulse-Effekt)
+5. **⚡ Lieferung in 2–3 Werktagen** (Normal)
+6. **🔄 30 Tage Geld-zurück-Garantie** (Fett & Großbuchstaben)
+7. **💎 Premium Qualität für Ihren Liebling** (Hervorhebung)
+8. **🌟 Neu: Personalisierte Gravur verfügbar** (Pulse-Effekt)
 
 ## 🎯 Tipps für optimale Ergebnisse
 
@@ -65,6 +97,12 @@ Das Preset enthält bereits optimierte Ankündigungen:
 - 🚚 für Versand
 - ⚡ für Schnelligkeit
 - 🔄 für Garantie/Service
+- 💎 für Premium-Produkte
+- 🌟 für Highlights/Neuigkeiten
+- 🎯 für Angebote/Aktionen
+- 🏆 für Qualität/Auszeichnungen
+- 💫 für Magie/Besonderes
+- 🔥 für Sale/Hot-Deals
 
 ### Text-Länge
 - **Kurz halten**: 3-8 Wörter pro Ankündigung
