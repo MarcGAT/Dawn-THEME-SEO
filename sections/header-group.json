@@ -35,7 +35,7 @@
         "scroll_speed": 30,
         "item_gap": 8,
         "mobile_item_gap": 4,
-        "vertical_padding": 8,
+        "vertical_padding": 14,
         "auto_rotate": false,
         "change_slides_speed": 5,
         "color_scheme": "",
