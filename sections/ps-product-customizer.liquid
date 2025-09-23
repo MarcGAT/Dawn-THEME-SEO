@@ -1,72 +1,117 @@
 <div class="ps-product-customizer" data-ps-customizer>
-  {%- comment -%}
-    Füge eigene Eingaben (input/select/textarea) hier ein.
-    Beschrifte sie mit data-ps-prop="Label" oder setze name="ps_<schlüssel>".
-    Beispiel:
-    <select data-ps-prop="Farbe">
-      <option value="Schwarz">Schwarz</option>
-      <option value="Rot">Rot</option>
-    </select>
-  {%- endcomment -%}
-  <div class="ps-fields">
-    <div class="field">
-      <label for="ps-farbe">Farbe</label>
-      <select id="ps-farbe" data-ps-prop="Farbschema">
-        <option value="Schwarz">Schwarz</option>
-        <option value="Rot">Rot</option>
-        <option value="Grün">Grün</option>
-        <option value="Blau">Blau</option>
-      </select>
-    </div>
+  <div class="ps-setup-entry">
+    <button type="button" class="button" id="ps-start-setup">Paracord Setup starten</button>
+    <small class="ps-setup-hint">Konfiguriere Farbe, Schnalle, Muster u.v.m. in wenigen Schritten.</small>
+  </div>
 
-    <div class="field">
-      <label for="ps-laenge">Leinenlänge (cm)</label>
-      <input
-        id="ps-laenge"
-        type="number"
-        min="50"
-        max="300"
-        step="1"
-        data-ps-prop="Leinenlänge"
-        placeholder="z. B. 120"
-      >
-    </div>
+  <div class="ps-setup-modal" id="ps-setup-modal" aria-hidden="true" role="dialog">
+    <div class="ps-setup-dialog" role="document">
+      <div class="ps-setup-header">
+        <h3 class="ps-setup-title">Dein Paracord-Set konfigurieren</h3>
+        <button type="button" class="ps-setup-close" id="ps-setup-close" aria-label="Schließen">×</button>
+      </div>
+      <div class="ps-setup-progress"><span id="ps-step-indicator">Schritt 1/5</span></div>
+      <div class="ps-setup-body">
+        <div class="ps-step" data-step="1">
+          <h4>Farbe auswählen</h4>
+          <div class="ps-fields">
+            <div class="field">
+              <label for="ps-farbe">Farbschema</label>
+              <select id="ps-farbe" data-ps-prop="Farbschema">
+                <option value="Schwarz">Schwarz</option>
+                <option value="Rot">Rot</option>
+                <option value="Grün">Grün</option>
+                <option value="Blau">Blau</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
-    <div class="field">
-      <label for="ps-karabiner">Karabiner</label>
-      <select id="ps-karabiner" data-ps-prop="Karabiner">
-        <option value="Standard">Standard</option>
-        <option value="Messing">Messing</option>
-        <option value="Edelstahl">Edelstahl</option>
-        <option value="Schwarz Matt">Schwarz Matt</option>
-      </select>
-    </div>
+        <div class="ps-step" data-step="2" hidden>
+          <h4>Länge festlegen</h4>
+          <div class="ps-fields">
+            <div class="field">
+              <label for="ps-laenge">Leinenlänge (cm)</label>
+              <input
+                id="ps-laenge"
+                type="number"
+                min="50"
+                max="300"
+                step="1"
+                data-ps-prop="Leinenlänge"
+                placeholder="z. B. 120"
+              >
+            </div>
+          </div>
+        </div>
 
-    <div class="field">
-      <label for="ps-gravur-name">Gravur Name</label>
-      <input id="ps-gravur-name" type="text" maxlength="20" data-ps-prop="Gravur Name" placeholder="Name">
-    </div>
+        <div class="ps-step" data-step="3" hidden>
+          <h4>Schnalle / Karabiner</h4>
+          <div class="ps-fields">
+            <div class="field">
+              <label for="ps-karabiner">Karabiner</label>
+              <select id="ps-karabiner" data-ps-prop="Karabiner">
+                <option value="Standard">Standard</option>
+                <option value="Messing">Messing</option>
+                <option value="Edelstahl">Edelstahl</option>
+                <option value="Schwarz Matt">Schwarz Matt</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
-    <div class="field">
-      <label for="ps-gravur-telefon">Gravur Telefon</label>
-      <input
-        id="ps-gravur-telefon"
-        type="text"
-        maxlength="20"
-        data-ps-prop="Gravur Telefon"
-        placeholder="Telefonnummer"
-      >
-    </div>
+        <div class="ps-step" data-step="4" hidden>
+          <h4>Gravur (optional)</h4>
+          <div class="ps-fields">
+            <div class="field">
+              <label for="ps-gravur-name">Gravur Name</label>
+              <input id="ps-gravur-name" type="text" maxlength="20" data-ps-prop="Gravur Name" placeholder="Name">
+            </div>
+            <div class="field">
+              <label for="ps-gravur-telefon">Gravur Telefon</label>
+              <input
+                id="ps-gravur-telefon"
+                type="text"
+                maxlength="20"
+                data-ps-prop="Gravur Telefon"
+                placeholder="Telefonnummer"
+              >
+            </div>
+          </div>
+        </div>
 
-    <div class="field">
-      <label for="ps-hinweise">Hinweise</label>
-      <textarea id="ps-hinweise" rows="2" data-ps-prop="Hinweise" placeholder="Besondere Wünsche ..."></textarea>
+        <div class="ps-step" data-step="5" hidden>
+          <h4>Hinweise & Übersicht</h4>
+          <div class="ps-fields">
+            <div class="field">
+              <label for="ps-hinweise">Hinweise</label>
+              <textarea
+                id="ps-hinweise"
+                rows="2"
+                data-ps-prop="Hinweise"
+                placeholder="Besondere Wünsche ..."
+              ></textarea>
+            </div>
+          </div>
+          <div class="ps-review">
+            <h5>Deine Auswahl</h5>
+            <ul id="ps-review-list"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="ps-setup-footer">
+        <button type="button" class="button button--secondary" id="ps-back" disabled>Zurück</button>
+        <button type="button" class="button" id="ps-next">Weiter</button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
   (function () {
+    var CURRENT_STEP = 1;
+    var TOTAL_STEPS = 5;
+
     function findProductForm(startEl) {
       // Suche das nächste Produkt-Formular innerhalb des Product-Sections
       var el = startEl;
@@ -127,6 +172,51 @@
       });
     }
 
+    function openSetup(modal) {
+      modal.setAttribute('aria-hidden', 'false');
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSetup(modal) {
+      modal.setAttribute('aria-hidden', 'true');
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    function showStep(root, step) {
+      CURRENT_STEP = step;
+      var steps = root.querySelectorAll('.ps-step');
+      steps.forEach(function (s) {
+        var n = parseInt(s.getAttribute('data-step'), 10);
+        if (n === step) {
+          s.removeAttribute('hidden');
+        } else {
+          s.setAttribute('hidden', '');
+        }
+      });
+      var ind = root.querySelector('#ps-step-indicator');
+      if (ind) ind.textContent = 'Schritt ' + step + '/' + TOTAL_STEPS;
+      var back = root.querySelector('#ps-back');
+      var next = root.querySelector('#ps-next');
+      if (back) back.disabled = step === 1;
+      if (next) next.textContent = step === TOTAL_STEPS ? 'In den Warenkorb' : 'Weiter';
+    }
+
+    function updateReview(root) {
+      var list = root.querySelector('#ps-review-list');
+      if (!list) return;
+      list.innerHTML = '';
+      collectCustomizerInputs(root).forEach(function (el) {
+        var key = makePropertyName(el);
+        var val = valueFrom(el);
+        if (!val) return;
+        var li = document.createElement('li');
+        li.textContent = key + ': ' + val;
+        list.appendChild(li);
+      });
+    }
+
     function init(root) {
       var form = findProductForm(root);
       if (!form) return;
@@ -153,40 +243,76 @@
 
       // Initial einmal syncen
       sync();
-    }
 
-    document.addEventListener('DOMContentLoaded', function () {
-      var nodes = document.querySelectorAll('[data-ps-customizer]');
-      Array.prototype.forEach.call(nodes, init);
-      // Optionaler eigener ATC-Button innerhalb der Section
-      var form = document.querySelector('product-form form') || document.querySelector('form[action*="/cart/add"]');
-      var root = document.querySelector('[data-ps-customizer]');
-      if (form && root && !root.querySelector('#ps-add-to-cart')) {
-        var btn = document.createElement('button');
-        btn.id = 'ps-add-to-cart';
-        btn.type = 'button';
-        btn.className = 'button';
-        btn.style.width = '100%';
-        btn.textContent = 'In den Warenkorb';
-        var hint = document.createElement('small');
-        hint.id = 'ps-atc-hint';
-        hint.style.display = 'block';
-        hint.style.marginTop = '6px';
-        hint.style.color = '#6b7280';
-        hint.textContent = 'Der Button überträgt alle Personalisierungen.';
-        var wrap = document.createElement('div');
-        wrap.style.marginTop = '12px';
-        wrap.appendChild(btn);
-        wrap.appendChild(hint);
-        root.appendChild(wrap);
-        btn.addEventListener('click', function () {
+      // Setup-Modal Logik
+      var modal = root.querySelector('#ps-setup-modal');
+      var startBtn = root.querySelector('#ps-start-setup');
+      var closeBtn = root.querySelector('#ps-setup-close');
+      var nextBtn = root.querySelector('#ps-next');
+      var backBtn = root.querySelector('#ps-back');
+
+      if (modal && startBtn) {
+        startBtn.addEventListener('click', function () {
+          showStep(root, 1);
+          updateReview(root);
+          openSetup(modal);
+        });
+      }
+      if (modal && closeBtn) {
+        closeBtn.addEventListener('click', function () {
+          closeSetup(modal);
+        });
+      }
+      if (modal && nextBtn) {
+        nextBtn.addEventListener('click', function () {
+          if (CURRENT_STEP < TOTAL_STEPS) {
+            showStep(root, CURRENT_STEP + 1);
+            updateReview(root);
+            sync();
+            return;
+          }
+          // Letzter Schritt: in den Warenkorb
+          sync();
           try {
             form.requestSubmit ? form.requestSubmit() : form.submit();
           } catch (e) {
             form.submit();
           }
+          closeSetup(modal);
         });
       }
+      if (modal && backBtn) {
+        backBtn.addEventListener('click', function () {
+          if (CURRENT_STEP > 1) {
+            showStep(root, CURRENT_STEP - 1);
+            updateReview(root);
+          }
+        });
+      }
+
+      // Falls der normale ATC-Button geklickt wird, öffne zuerst den Setup-Flow
+      var externalAtc = form.querySelector('[type="submit"], button[name="add"]');
+      if (modal && externalAtc) {
+        externalAtc.addEventListener(
+          'click',
+          function (e) {
+            // Öffne Setup anstatt sofort zu submitten
+            if (modal.getAttribute('aria-hidden') !== 'false') {
+              e.preventDefault();
+              showStep(root, 1);
+              updateReview(root);
+              openSetup(modal);
+            }
+          },
+          { capture: true }
+        );
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var nodes = document.querySelectorAll('[data-ps-customizer]');
+      Array.prototype.forEach.call(nodes, init);
+      // Eigener ATC-Button wird durch den Setup-Flow ersetzt
     });
 
     // Für Theme-Editor (Ajax-Ladezyklen)
